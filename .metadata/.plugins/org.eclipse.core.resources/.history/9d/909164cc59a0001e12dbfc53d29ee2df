@@ -1,0 +1,357 @@
+package Inits;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+
+import Basics.ActionList;
+import Basics.ActionSet;
+import Basics.Hold;
+import Basics.MainApp;
+import Basics.Nums;
+import Basics.V2;
+import Basics.Val;
+import Basics.iAction;
+import Basics.iV2;
+import GUI.Box;
+import GUI.Butn;
+import GUI.ButnMenu;
+import GUI.ButnText;
+import GUI.EntryTable;
+import GUI.EntryTableRotarySet;
+import GUI.EntryTableSet;
+import GUI.GlassWindo;
+import GUI.HideSwitch;
+import GUI.InfiniteBackdrop;
+import GUI.Scale;
+import GUI.TextBox;
+import GUI.TextValField;
+import GUI.TextVertList;
+import GUI.ValClicker;
+import GUI.ValScroller;
+import GUI.Windo;
+import GUI.aGUI;
+import GUI.aGUI.BuildToggleOrdered;
+import Imaging.Fonts;
+import Imaging.Images;
+import Imaging.iDrawable;
+import Inputt.In;
+import Inputt.KeyTrap;
+import Inputt.MouseTrap;
+import Item.AniImg;
+import Item.Img;
+import Item.ItemActions;
+import Item.Itm;
+import Item.ItmGroup;
+import Item.ItmPane;
+import Item.ItmPaneSet;
+import Item.TileImg;
+import Game.*;
+
+
+public class TestInit implements iAction
+{
+	public void action(Object param)
+	{
+		ItmPaneSet panes = ItmPaneSet.panesets.get("TOP_PANE_SET");
+		ItmPaneSet.top_pane_set = panes;
+		
+		Itm mouse = new Itm("mouse_pointer",null,0,0,10,10);
+		Inputt.MouseTrap.top_trap = new MouseTrap("mouse", mouse);
+		
+		ActionSet.enqueueActionAdd("per_run", "per_run:KeyActions", new KeyActions());
+		ActionSet.enqueueActionAdd("per_run", "per_run:BorderCheck", new BorderCheck());
+		ActionSet.enqueueActionAdd("per_run", "per_run:EnemiesChase", new EnemiesChase());
+		
+		// backdrop layer
+		ItmPane backdrop_layer = new ItmPane("BACK");
+			backdrop_layer.setOrderable(false);
+			backdrop_layer.setDrawMode("direct");
+			
+			InfiniteBackdrop infinite_bg = new InfiniteBackdrop("bg",null);
+			backdrop_layer.addItm(infinite_bg);
+			
+		panes.addPane(backdrop_layer, true);
+		
+		origin = infinite_bg;
+		
+		// ground layer
+		ItmPane ground_layer = new ItmPane("GROUND");
+			ground_layer.setOrderable(false);
+			
+			TileImg ay = new TileImg("BG",infinite_bg,MainApp.screen_width,MainApp.screen_width,Images.loadImage("ground.jpg"));
+				ay.setVisible(true);
+				ay.xy = new V2(40,61);
+			ground_layer.addItm(ay);
+			
+			// player such
+				AniImg bird_r = new AniImg("BirdR",player,0,0,Images.loadImage("bird01.gif"));
+					bird_r.frames.add(Images.loadImage("bird02.gif"));
+					bird_r.frames.add(Images.loadImage("bird03.gif"));
+					bird_r.frames.add(Images.loadImage("bird04.gif"));
+					bird_r.frames.add(Images.loadImage("bird03.gif"));
+					bird_r.frames.add(Images.loadImage("bird02.gif"));
+					bird_r.setVisible(true);
+					bird_r.setRotaryTime(250000);
+					ActionSet.enqueueActionAdd("per_run", "per_run:BirdR", bird_r.getFrameUpdateAction(AniImg.update_mode.timed_rotary));
+				AniImg bird_l = new AniImg("BirdL",player,0,0,Images.loadImage("bird_reverse_01.gif"));
+					bird_l.frames.add(Images.loadImage("bird_reverse_02.gif"));
+					bird_l.frames.add(Images.loadImage("bird_reverse_01.gif"));
+					bird_l.frames.add(Images.loadImage("bird_reverse_03.gif"));
+					bird_l.frames.add(Images.loadImage("bird_reverse_04.gif"));
+					bird_l.frames.add(Images.loadImage("bird_reverse_03.gif"));
+					bird_l.setVisible(true);
+					bird_l.setRotaryTime(250000);
+					ActionSet.enqueueActionAdd("per_run", "per_run:BirdL", bird_l.getFrameUpdateAction(AniImg.update_mode.timed_rotary));
+				player.wh = new V2(bird_r.wh.x(),bird_r.wh.y()); player.refresh();
+				player.setVisible(true);
+				player.todraw_r = bird_r;
+				player.todraw_l = bird_l;
+				player.home = origin;
+				player.radius = 6;
+			ground_layer.addItm(player);
+
+			
+			//Actor enemy01 = new Actor("enemy01",origin,400,400);
+			//	enemy01.setVisible(true);
+				//AniImg enemy01_r = new AniImg("enemy01_r",enemy01,0,0,Images.loadImage("enemy_r.gif"));
+				//AniImg enemy01_l = new AniImg("enemy01_l",enemy01,0,0,Images.loadImage("enemy_l.gif"));
+				
+			Actor[] enemy_horde = buildEnemies("enemy_l.gif", "enemy_r.gif", 1000, 0, 200, 0, 200, 6);
+			for (Actor a : enemy_horde)
+			{	enemies.add(a);
+				ground_layer.addItm(a);
+			}
+			
+		panes.addPane(ground_layer, true);
+		// --------
+		
+		
+	}
+	
+	// Global variable HORROR!!!
+	
+	public static Itm origin = null;
+	
+	public static Itm active_itm = null;
+	
+	public static enum mode
+	{
+		menu_screen,
+		player_action
+	}
+	
+	public static mode screen_mode = mode.player_action;
+	
+	public static double player_speed = 200; // pixels per second
+	
+	public static Actor player = new Actor("player",null,1,1);
+	public static LinkedList<Actor> enemies = new LinkedList<Actor>();
+	
+	static double borderf = .6; // border fraction
+	static int run_border_x1 = (int)(MainApp.screen_width/2 * borderf); 
+	static int run_border_x2 = (int)(MainApp.screen_width - MainApp.screen_width/2 * borderf);
+	static int run_border_y1 = (int)(MainApp.screen_height/2 * borderf); 
+	static int run_border_y2 = (int)(MainApp.screen_height - MainApp.screen_height/2 * borderf);
+	
+	public static class BorderCheck implements iAction
+	{	public void action(Object param)
+		{
+			Itm a = player;
+			V2 xy = (V2)a.trueXY().sub(a.getOffset());
+			
+			if (xy.x() < run_border_x1)
+				origin.xy.X -= xy.x() - run_border_x1;
+			else if (xy.x() > run_border_x2)
+				origin.xy.X += run_border_x2 - xy.x();
+			if (xy.y() < run_border_y1)
+				origin.xy.Y -= xy.y() - run_border_y1;
+			else if (xy.y() > run_border_y2)
+				origin.xy.Y += run_border_y2 - xy.y();
+		}
+	}
+	
+	public static class KeyActions implements iAction
+	{
+		public KeyActions()
+		{
+			
+		}
+		
+		public void action(Object param)
+		{
+			if (screen_mode == mode.player_action)
+			{	
+				int init_direction = player.direction;
+				//int press_count = 0;
+				int dir = -1;
+				int x = 0;
+				int y = 0;
+				
+				if (In.keyPressed(KeyEvent.VK_UP))		y -= 1;
+				if (In.keyPressed(KeyEvent.VK_RIGHT)){	x += 1; player.direction = 1; }
+				if (In.keyPressed(KeyEvent.VK_DOWN))	y += 1;
+				if (In.keyPressed(KeyEvent.VK_LEFT)){	x -= 1; player.direction = 0; if (x == 0) player.direction = init_direction; }
+				
+				if (x > 0)
+				{
+					if (y < 0) 		dir = 1;
+					else if (y > 0)	dir = 3;
+					else dir = 2;
+				}
+				else if (x < 0)
+				{
+					if (y < 0)		dir = 7;
+					else if (y > 0)	dir = 5;
+					else dir = 6;
+				}else
+				{
+					if (y < 0)		dir = 0;
+					else if (y > 0)	dir = 4;
+					else dir = -1;
+				}
+				
+				ActionList.get("action_loop").addAction(new MoveCharacter(player, dir, player_speed * fraction()));
+				
+				if (In.keyPressed(KeyEvent.VK_SHIFT))
+					player.direction = init_direction;
+				
+			}else if (screen_mode == mode.menu_screen)
+			{		
+			}
+		}
+	}
+	
+	public static double fraction()
+	{
+		if (MainApp.run_time_value == 0)
+			return 0;
+		return 1.0 / (1000000000 / MainApp.run_time_value);
+	}
+	
+	public static class MoveCharacter implements iAction
+	{
+		public MoveCharacter(Actor event, int direction, double distance)
+		{
+			this.event = event;
+			this.distance = distance;
+			this.direction = direction;
+		}
+		public void action(Object param)
+		{
+			Actor.move(event, direction, distance);
+		}
+		public Actor event;
+		public double distance;
+		public int direction;
+	}
+	
+	public static class EnemiesChase implements iAction
+	{
+		public void action(Object param)
+		{
+			for (Actor a : enemies)
+			{	
+				if (a.getFocus() == null)
+				{
+					if (Actor.distanceTo(a, player) <= a.getSenseRange())
+						a.setFocus(player);
+					else if (a.walk_mode == Actor.walk_random)
+						Actor.walkRandomly(a, origin, fraction());
+				}
+				else
+				{	
+					if (a.getLossRange() >= 0 && Actor.distanceTo(a, a.getFocus()) > a.getLossRange())
+						a.setFocus(null);
+					else
+					{	if (a.getFocusMode() != Actor.mode_ignore)
+							;
+						if (a.getFocusMode() == Actor.mode_attack)
+						{	
+							Actor.faceCharacter(a, player);
+							Actor.followCharacter(a, player, a.run_speed * fraction());
+						}
+						else if (a.getFocusMode() == Actor.mode_evade)
+						{
+							Actor.faceAway(a, player);
+							Actor.evadeCharacter(a, player, a.run_speed * fraction());
+						}
+					}
+				}
+				//System.out.println(a);
+			}
+		}
+	}
+	
+	public static Actor[] buildEnemies(String left_name, String right_name, int count, double xmin, double xmax, double ymin, double ymax, double radius)
+	{
+		BufferedImage a = Images.loadImage(left_name);
+		BufferedImage b = Images.loadImage(right_name);
+		
+		Actor[] r = new Actor[count];
+		for (int i = 0; i < count; ++i)
+		{
+			double x = Math.random()*(xmax - xmin) + xmin;
+			double y = Math.random()*(ymax - ymin) + ymin;
+			
+			Actor enemy = new Actor("enemy:"+count,origin,x,y);
+			enemy.setVisible(true);
+			
+			AniImg Left = new AniImg("enemy:"+left_name+":L:"+i,enemy,0,0,a);
+			AniImg Right = new AniImg("enemy:"+right_name+":R:"+i,enemy,0,0,b);
+			
+			enemy.todraw_l = Left;
+			enemy.todraw_r = Right;
+			enemy.wh = new V2(a.getWidth(), b.getHeight());
+			enemy.refresh();
+			enemy.oxy = new V2(.5,1);
+			enemy.radius = radius;
+			
+			enemy.setSenseRange(200);
+			enemy.setLossRange(300);
+			enemy.setFocusMode(Actor.mode_attack);
+			
+			r[i] = enemy; 
+		}
+		
+		return r;
+	}
+	
+	public static ArrayList<Actor> actors = new ArrayList<Actor>();
+	public static Actor[] actors_x = null;
+	public static Actor[] actors_y = null;
+	
+	public static Comparator<Actor> actors_comp_x = new Actor.Compare_X();
+	public static Comparator<Actor> actors_comp_y = new Actor.Compare_Y();
+	
+	public static void sortActors()
+	{
+		Actor[] arr = null;
+		actors.toArray(arr);
+		
+		for (int i = 0; i < arr.length; ++i)
+		{	actors_comp_x[i] = arr[i];
+			actors_comp_y[i] = arr[i];
+		}
+		
+		Arrays.sort(arr,actors_comp_x);
+		Arrays.sort(actors_comp_y);
+	}
+	
+	public static void budge(iV2 a, double ra, iV2 b, double rb)
+	{
+		double d = Nums.distance(a,b);
+		if (d < ra + rb)
+		{
+			double c = (2*d - ra - rb) / ra;
+			a = b.sub(a).mult(c).add(a);
+		}
+	}
+	
+}

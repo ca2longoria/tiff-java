@@ -1,0 +1,148 @@
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class base1
+{
+	private static arrayWorks aw = new arrayWorks();
+	public static int turn = 1;
+	public static gameboard g;
+	public static int gWidth = 30;
+	public static int gHeight = 30;
+	
+	public static void main(String[] args) throws FileNotFoundException
+	{
+		weapons[] theW = getWeapons();
+		piece[] pieces = getPlayers();
+		g = new gameboard(gWidth, gHeight, pieces, theW);
+		
+		boolean win = false;
+		
+		g.quickPiecePlace(); // quickly puts pieces on the board, just before the game starts.
+		while (win == false)
+		{
+			System.out.println("Turn:  " + turn);
+			nextTurn();
+			turn++;
+		}
+		
+	}
+	
+	public static void nextTurn() throws FileNotFoundException
+	{
+		//g.printBoard('b');
+		
+		g.nextStep();
+	}
+	
+	//  Reads the appointed text file for players' information.  Javajavajavajava!
+	public static piece[] getPlayers() throws FileNotFoundException
+	{
+		File f = new File("trialGame.txt"); // This is the file the players will be taken from.
+		Scanner s1 = new Scanner(f);
+		Scanner s2 = new Scanner(f);
+		
+		int counter = 0;
+		while (s1.hasNext())
+		{
+			if (s1.next().equals("*"))
+				counter++;
+		}
+		//System.out.println(counter);
+		piece[] allPieces = new piece[counter];
+		
+		String[] allNames = new String[counter];
+		int[] allX = new int[counter];
+		int[] allY = new int[counter];
+		char[] allBody = new char[counter];
+		int[][] allWeapons = new int[10][counter]; // 10 is the current weapons limit
+		int[] allHealth = new int[counter];
+		int[] allSpeed = new int[counter];
+		String[] allMode = new String[counter];
+		String[] allTeams = new String[counter];
+		
+		int counter2 = 0;
+		int k = 0;
+		while (s2.hasNext())		//  This is where each piece is specifiedin the piece[].
+		{
+			if (s2.next().equals("*") && counter2 <= counter)
+			{
+				allNames[counter2] = s2.next();
+				allX[counter2] = s2.nextInt();
+				allY[counter2] = s2.nextInt();
+				allBody[counter2] = s2.next().charAt(0);
+				
+				int a = s2.nextInt();
+				for (int i = 0; i < a; i++)
+					allWeapons[i][k] = s2.nextInt();
+				k++;
+				
+				allHealth[counter2] = s2.nextInt();
+				allSpeed[counter2] = s2.nextInt();
+				allMode[counter2] = s2.next();
+				allTeams[counter2] = s2.next();
+				
+				counter2++;
+			}
+		}
+		
+		int[] tempWeapons = new int[10];
+		for (int i = 0; i < counter; i++)  // This puts all the above into their respective piece.
+		{
+			for (int j = 0; j < allWeapons.length; j++) // j is x here.
+				tempWeapons[j] = allWeapons[j][i];
+			allPieces[i] = new piece(allNames[i], allX[i], allY[i], allBody[i], tempWeapons, allHealth[i], allSpeed[i], allMode[i], allTeams[i]);
+			//System.out.println(allNames[i] + "'s body is...");
+			//allPieces[i].printPieceInfo("body");
+			//allPieces[i].printPieceInfo("health");
+			//System.out.println("... and their team is " + allTeams[i]);
+		}				// Note, the "new" above.  This is an array of pieces, so each piece is a new one.
+
+		return allPieces;
+	}
+	
+	// Gets the weapons to be used in the game.
+	public static weapons[] getWeapons() throws FileNotFoundException
+	{
+		File f = new File("weaponsList.txt");
+		Scanner s1 = new Scanner(f);
+		Scanner s2 = new Scanner(f);
+		
+		int counter = 0;
+		while (s1.hasNext())
+		{
+			if(s1.next().equals("*"))
+				counter++;
+		}
+		
+		weapons[] w = new weapons[counter];
+		String[] allName = new String[counter];
+		int[] allIndex = new int[counter];
+		int[] allRange = new int[counter];
+		int[] allPower = new int[counter];
+		int[] allBlast = new int[counter];
+		int[] allType = new int[counter];
+		// ( name, index, range, power, blast, type )
+		for (int i = 0; i < w.length; i++)
+		{
+			if (s2.next().equals("*"))
+			{
+				allName[i] = s2.next();
+				allIndex[i] = s2.nextInt();
+				allRange[i] = s2.nextInt();
+				allPower[i] = s2.nextInt();
+				allBlast[i] = s2.nextInt();
+				allType[i] = s2.nextInt();
+			}
+		}
+		aw.printIntArray(allIndex);
+		for (int i = 0; i < w.length; i++)
+		{
+			w[i] = new weapons(allName[i], allIndex[i], allRange[i], allPower[i], allBlast[i], allType[i]);
+			System.out.println(w[i].name + " has been created successfully.");
+		}
+		
+		return w;
+	}
+}

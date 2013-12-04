@@ -1,0 +1,59 @@
+package net.synapsehaven.tiff;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import com.sun.media.jai.codec.ImageCodec;
+import com.sun.media.jai.codec.ImageEncoder;
+import com.sun.media.jai.codec.TIFFEncodeParam;
+
+public class Tiff
+{
+	public Tiff(String filenames)
+	{
+		this(new String[]{filenames});
+	}
+	public Tiff(String[] filenames)
+	{
+		this(Arrays.asList(filenames));
+	}
+	public Tiff(Iterable<String> filenames)
+	{
+		for (String s : filenames)
+		{
+			try { bufs.add(ImageIO.read(new File(s))); }
+			catch (IOException e){}
+		}
+	}
+	
+	List<BufferedImage> bufs = new ArrayList<BufferedImage>();
+	
+	public void trippleLayer(String fname)
+	{
+		TIFFEncodeParam params = new TIFFEncodeParam();
+		OutputStream os = null;
+		try { os = new FileOutputStream(fname); }
+		catch (FileNotFoundException e){}
+		ImageEncoder encoder = ImageCodec.createImageEncoder("tiff",os,params);
+		
+		bufs.add(bufs.get(0));
+		bufs.add(bufs.get(0));
+		
+		Iterator<BufferedImage> iter = bufs.iterator();
+		iter.next();
+		params.setExtraImages(iter);
+		
+		try { encoder.encode(bufs.get(0)); } catch (IOException e){}
+		try { os.close(); } catch (IOException e){}
+	}
+}

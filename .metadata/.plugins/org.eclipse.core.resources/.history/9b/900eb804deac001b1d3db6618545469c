@@ -1,0 +1,30 @@
+
+public class base1 {
+
+	
+	
+	public static void main(String[] args)
+	{
+		piece player = new piece(0, 0, 'C', "human");
+		
+		piece[] pieces = {player};
+		gameboard g = new gameboard(20, 10, pieces);
+		
+		boolean win = false;
+		
+		int turn = 1;
+		while (win == false)
+		{
+			System.out.println("Turn:  " + turn);
+			nextTurn(g);
+			turn++;
+		}
+		
+	}
+	
+	public static void nextTurn(gameboard gb)
+	{
+		gb.nextStep();
+		gb.printBoard('b');
+	}
+}

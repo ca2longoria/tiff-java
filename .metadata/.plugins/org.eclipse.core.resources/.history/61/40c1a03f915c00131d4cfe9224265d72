@@ -1,0 +1,14 @@
+package net.synapsehaven.tiff;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Tiff
+{
+	public Tiff(){}
+	
+	List<BufferedImage> bufs = new ArrayList<BufferedImage>();
+	
+	
+}

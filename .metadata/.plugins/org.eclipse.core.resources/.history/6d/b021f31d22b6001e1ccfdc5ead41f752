@@ -1,0 +1,25 @@
+package Timers;
+
+public class LoopTimer
+{
+	public LoopTimer(long nanos)
+	{	this.nanos = nanos;
+		start_time = System.nanoTime();
+	}
+	public boolean checkTime()
+	{	long now = System.nanoTime();
+		if (now - start_time > nanos)
+		{	start_time = now - ((now-start_time) % nanos);
+			//start_time = now-(now-start_time-nanos);
+			return true;
+		}	return false;
+	}
+	public long remainingTime()
+	{
+		long now = System.nanoTime();
+		return ((now-start_time) % nanos);
+	}
+	public long nanos;
+	protected long start_time;
+	protected Object pause_bool; 
+}

@@ -1,0 +1,34 @@
+import java.awt.*;
+import java.awt.image.BufferStrategy;
+import javax.swing.JFrame;
+ 
+public class Game extends JFrame {
+ 
+	public static Point p = new Point()
+	
+	public static void main(String[] args) {
+		new Game();
+	}
+	
+	public Game() {
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setUndecorated(true);
+		this.setSize(800,600);
+		this.setVisible(true);
+		
+		this.createBufferStrategy(2);
+		
+		gameLoop();
+	}
+	
+	private void gameLoop() {
+		// Your game logic goes here.
+ 
+		drawStuff();
+	}
+	
+	private void drawStuff() {
+		// Code for the drawing goes here.
+	}
+ 
+}

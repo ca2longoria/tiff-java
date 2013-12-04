@@ -1,0 +1,32 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class Main
+{
+	public static void main(String[] args)
+	{	Scanner s = new Scanner(System.in);
+		
+		//*
+		try{s = new Scanner(new File("test"));}catch(FileNotFoundException z){}
+		//*/
+		String pass = "BICOLORABLE.";
+		String fail = "NOT BICOLORABLE.";
+		StringBuilder printString = new StringBuilder();
+		LinkedList<Integer> bool = new LinkedList<Integer>();
+		int count = 0;
+		while (s.hasNextLine())
+		{	if (run(s.nextLine()))	++numPass;
+			else 					++numFail;
+			++count;
+		}
+		while (count > 0)
+		{	
+			--count;
+		}
+	}
+
+	public static boolean run(String in)
+	{	
+	}
+}

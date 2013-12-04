@@ -1,0 +1,13 @@
+#Mon Dec 08 08:18:59 CST 2008
+SHOW_WARNINGS=0
+SYNTAX_VALIDATION_PREFERENCE=0
+ENABLE_DEBUG_CONSOLE=0
+eclipse.preferences.version=1
+sourceCriticLevel5=Warning
+sourceCriticLevel4=Warning
+sourceCriticLevel3=Warning
+sourceCriticLevel2=Warning
+sourceCriticLocation=/usr/bin/perlcritic
+INTERPRETER_TYPE=Cygwin
+sourceCriticLevel1=Warning
+USE_TAINT_MODE=0

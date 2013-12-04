@@ -1,0 +1,167 @@
+import java.io.File;
+import java.util.Scanner;
+
+public class Primes
+{
+	public static Scanner s = new Scanner(System.in);
+	public static primeList p;
+	public static int[] hold = new int[4];
+	public static int[] allPrimes;
+	
+	public static void main(String[] args)
+	{
+		///*
+		try{
+			s = new Scanner(new File("tests.in"));
+		}catch(Exception z){}
+		//*/
+		
+		
+		int num = 0;
+		p = new primeList(10000000);
+		while(s.hasNextLine())
+		{	num = s.nextInt();
+			//System.out.println("hold: " + num);
+			p.update(num);
+			//p.print();
+			System.out.println(num + ":");
+			if (fourAdd(num) && zeroCheck())
+			{	System.out.println(hold[0] + " " + hold[1] + " " + hold[2] + " " + hold[3]);
+			}
+			else
+				System.out.println("Impossible");
+		}
+	}
+	private static boolean zeroCheck()
+	{	if (hold[0] == 0 || hold[1] == 0 || hold[2] == 0 || hold[3] == 0)
+			return false;
+		return true;
+	}
+	public static boolean fourAdd(int in)
+	{	if (in < 4)
+			return false;
+		else if (in == 4)
+		{	hold[0] = 1; hold[1] = 1; hold[2] = 1; hold[3] = 1;
+			return true;
+		}
+		int a = -1;
+		int b = -1;
+		int c = -1;
+		int d = -1;
+		int num = -1;
+		int sz = p.size;
+		for (int i = -1; ++i < sz;)
+		{	a = p.get(i);
+			if (a << 1 + a + 1 > in)
+				i = sz;
+			else if (a << 1 + a + 1 == in)
+			{	hold[0] = 1; 
+				hold[1] = a; hold[2] = a; hold[3] = a;
+				System.out.println("method:  N");
+				return true;
+			}
+		}
+		for (int i = -1; ++i < sz;)
+		{	a = p.get(i);
+			for (int h = -1; ++h < sz;)
+			{	b = p.get(h);
+				if ((a << 1) + (b << 1) > in)
+					h = sz;
+				else if ((a << 1) + (b << 1) == in)
+				{	hold[0] = a; hold[1] = a;
+					hold[2] = b; hold[3] = b;
+					System.out.println("method:  N^2");
+					return true;
+				}
+			}
+		}
+		for (int i = -1; ++i < sz;)
+		{	a = p.get(i);
+			for (int h = -1; ++h < sz;)
+			{	b = p.get(h);
+				for (int g = -1; ++g < sz;)
+				{	c = p.get(g);
+					if (a << 1 + b + c > in)
+						g = sz;
+					else if (a << 1 + b + c == in)
+					{	hold[0] = a; hold[1] = a;
+						hold[2] = b;
+						hold[3] = c;
+						System.out.println("method:  N^3 - " + in + " " + (a<<1 + b + c));
+						return true;
+					}
+				}
+			}
+		}
+		for (int i = -1; ++i < sz;)
+		{	a = p.get(i);
+			for (int h = -1; ++h < sz;)
+			{	b = p.get(h);
+				for (int g = -1; ++g < sz;)
+				{	c = p.get(g);
+					for (int f = -1; ++f < sz;)
+					{	d = p.get(f);
+						if (a + b + c + d > in)
+							f = sz;
+						else if (a + b + c + d == in)
+						{	hold[0] = a; hold[1] = b;
+							hold[2] = c; hold[3] = d;
+							System.out.println("method:  N^4");
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	private static class primeList
+	{
+		private int[] primes;
+		public int size = 0;
+		public primeList(int a)
+		{	this.primes = new int[a];
+			update(0);
+		}
+		public void update(int num)
+		{	findPrimes(this.size, num);
+		}
+		public int get(int in)
+		{	return primes[in];
+		}
+		private void findPrimes(int a, int b)
+		{	if (b > this.size)
+			{	a -= 1;
+				if ((a & 1) == 1)
+					++a; // gets number to an eventual odd.
+				while (++a < b)
+				{	if (isPrime(a))
+					{	this.primes[size] = a;
+						++this.size;
+					}
+					++a;
+				}
+			}
+		}
+		private boolean isPrime(int in)
+		{	if ((in & 1) == 0)
+				return false;
+			// all nums are now odd.
+			else if (in == 1)
+				return true;
+			for (int i = 1; ++i <= in >> 1;)
+			{	++i;
+				if (in % i == 0)
+					return false;
+			}
+			return true;
+		}
+		public void print()
+		{	System.out.println("primeList:  size-" + size);
+			for (int i = -1; ++i < size;)
+				System.out.print(primes[i] + " ");
+			System.out.println();
+		}
+	}
+}

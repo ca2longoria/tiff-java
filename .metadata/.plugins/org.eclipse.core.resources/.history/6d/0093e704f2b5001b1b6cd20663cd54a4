@@ -1,0 +1,14 @@
+The Weapons:
+
+
+
+  Name			[Index]		Range		Power		Blast		Type
+______________________________________________________________________
+
+* Claymor		0			3			4			0			Sword
+* Shuriken		1			5			1			0			Thrown
+* G-Blast		2			6			65			3			Thrown
+* G-Beam		3			0			32			1			Beam
+* Shortsword	4			1			2			0			Sword
+* Sniper-Rifle	5			0			5			0			Gun
+* Flame-Element 6			3			15			2			Thrown

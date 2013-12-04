@@ -1,0 +1,32 @@
+package net.synapsehaven.tiff;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class Tiff
+{
+	public Tiff(String filenames)
+	{
+		this(new String[]{filenames});
+	}
+	public Tiff(String[] filenames)
+	{
+		this(Arrays.asList(filenames));
+	}
+	public Tiff(Iterable<String> filenames)
+	{
+		for (String s : filenames)
+		{
+			
+		}
+	}
+	
+	List<BufferedImage> bufs = new ArrayList<BufferedImage>();
+	
+	public void trippleLayer()
+	{
+		
+	}
+}

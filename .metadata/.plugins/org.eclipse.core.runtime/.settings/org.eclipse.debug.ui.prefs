@@ -1,0 +1,7 @@
+#Tue Dec 03 20:04:11 CST 2013
+Console.limitConsoleOutput=false
+eclipse.preferences.version=1
+Console.highWaterMark=88000
+preferredTargets=default\:default|
+org.eclipse.debug.ui.PREF_LAUNCH_PERSPECTIVES=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<launchPerspectives/>\n
+org.eclipse.debug.ui.user_view_bindings=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<viewBindings>\n<view id\="org.eclipse.ui.console.ConsoleView">\n<perspective id\="org.python.pydev.ui.PythonPerspective" userAction\="opened"/>\n<perspective id\="org.rubypeople.rdt.ui.PerspectiveRuby" userAction\="opened"/>\n<perspective id\="org.eclipse.jdt.ui.JavaPerspective" userAction\="opened"/>\n</view>\n</viewBindings>\n

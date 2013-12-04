@@ -1,0 +1,305 @@
+/*  Student information for assignment
+ *
+ *  On <our|my> honor, <NAME1> and <NAME2>,
+ *  this programming assignment is <our|my> own work.
+ *
+ *  Student #1:
+ *  Name #1:
+ *  EID #1:
+ *  email address #1:
+ *  TA name #1:
+ *  Unique course ID #1:
+ *  programming hours #1:
+ *  
+ *  					Began at 12:00 noon
+ *
+ *  Student #2:
+ *  Name #2:
+ *  EID #2:
+ *  email address #2:
+ *  TA name #2:
+ *  Unique course ID #2:
+ *  programming hours #2:
+ *
+ * Total Lines of Code (all classes):
+*/
+
+import java.util.Scanner;
+
+public class Game
+{
+	/**
+	  * Play a game of war pausing for input after each round.
+	  */
+	public void go()
+	{
+		buildGame(true, 1);
+	}
+
+
+	/**
+	 * Play a game of war without pausing for input after each round.
+	 */
+	public void goFast()
+	{
+		int num = 100;
+		for (int i = 0; i < num; i++)
+		{
+			buildGame(true, 1);
+			totalGames++;
+		}
+	}
+
+
+	/**
+	 * Play many games of War. Output is suppressed. No results of individual rounds
+	 * or games is shown. When complete prints out the number of games won
+	 * by each player, the percentage of games won by each player,
+	 * and the average number of rounds per game.
+	 * @param numGames > 1
+	 */
+	public void playMany(int numGames){
+		
+	}
+
+	private Deck HolderDeck;
+	private Deck p1Active = new Deck(0);
+	private Deck p1Won = new Deck(0);
+	private Deck p2Active = new Deck(0);
+	private Deck p2Won = new Deck(0);
+	
+	private int totalGames = 0;
+	private int totalRounds = 0;
+	
+	private int p1Wins = 0;
+	private int p2Wins = 0;
+	private int p1Losses = 0;
+	private int p2Losses = 0;
+	
+	private boolean p1Winner = true;
+	
+	//private boolean printEveryRound;
+	
+	public void buildGame(boolean pause, int holderSize)
+	{
+		System.out.println("Print this LINE!");
+		buildHolderDeck(holderSize);
+		// test code
+		//for (int i = 0; i < this.HolderDeck.getCount(); i++)
+		//	System.out.println("P1: from bottom up..." + this.HolderDeck.cards[i]);
+		
+		splitToDecks();
+		
+		// test code
+		for (int i = 0; i < p1Active.getCount(); i++)
+			System.out.println("P1: from bottom up..." + this.p1Active.cards[i]);
+		System.out.println();
+		for (int i = 0; i < p1Active.getCount(); i++)
+			System.out.println("P2: from bottom up..." + this.p2Active.cards[i]);
+		
+		
+		// While Running
+		while (this.p1Active.getCount() + this.p1Won.getCount() != 0 || this.p1Active.getCount() + this.p1Won.getCount() != 0 )
+		{
+			runRound();
+			totalRounds++;
+		}
+		if (this.p1Active.getCount() + this.p1Won.getCount() <= 0)
+			p1Winner = false;
+		if (p1Winner)
+		{
+			System.out.println("Player 1 wins!!!");
+			System.out.println("Player 1 has lost " + p1Losses + " times, and has won " + p1Wins + " times,");
+			System.out.println("for a total of " + totalRounds + " rounds.");
+		}
+		else
+		{
+			System.out.println("Player 2 wins!!!");
+			System.out.println("Player 2 has lost " + p2Losses + " times, and has won " + p2Wins + " times!");
+		}
+			
+	}
+	public void buildHolderDeck(int numDecks)
+	{
+		this.HolderDeck = new Deck();
+		for (int i = 1; i < numDecks; i++)
+			this.HolderDeck.addDeck(new Deck());
+	}
+	public void splitToDecks()
+	{
+		this.HolderDeck.shuffleThis();
+		while (this.HolderDeck.getCount() > 0)
+		{
+			/*System.out.println("p1Active length: " + p1Active.getCount());
+			System.out.println("p2Active length: " + p2Active.getCount());
+			System.out.println("Holder Deck: " + HolderDeck.getCount());*/
+			this.p1Active.addTopCard(this.HolderDeck.getTopCard());
+			this.HolderDeck.eatTopCard();
+			this.p2Active.addTopCard(this.HolderDeck.getTopCard());
+			this.HolderDeck.eatTopCard();
+		}
+	}
+	public void runRound()
+	{
+		if (this.p1Active.getCount() <= 0)
+			resetP1();
+		if (this.p2Active.getCount() <= 0)
+			resetP2();
+		
+		/*for (int i = 0; i < p1Active.getCount(); i++)
+			System.out.println("P1: from bottom up..." + this.p1Active.cards[i]);
+		System.out.println();
+		for (int i = 0; i < p2Active.getCount(); i++)
+			System.out.println("P2: from bottom up..." + this.p2Active.cards[i]);
+		*/
+		
+		System.out.println("Total Cards:  " + (p1Active.getCount() + p1Won.getCount() + p2Active.getCount() + p2Won.getCount()));
+		
+		System.out.println("p1count:  " + p1Active.getCount());
+		System.out.println("p2count:  " + p2Active.getCount());
+		System.out.println("p1Won:  " + p1Won.getCount());
+		System.out.println("p2Won:  " + p2Won.getCount());
+		
+		System.out.println("p1A :" + this.p1Active.getTopCard());
+		System.out.println("p2A :" + this.p2Active.getTopCard());
+		
+		if (this.p1Active.getTopCard().getRank() > this.p2Active.getTopCard().getRank())
+		{ // p1 wins
+			postWinP1();
+		}
+		else if (this.p1Active.getTopCard().getRank() < this.p2Active.getTopCard().getRank())
+		{ // p2 wins
+			postWinP2();
+		}
+		else if (this.p1Active.getTopCard().getRank() == this.p2Active.getTopCard().getRank())
+		{
+			System.out.println("Tie!  Prepare for WAR!!!");
+			
+			for (int i = 0; i < 4; i++)
+			{
+				doubleCheck();
+				HolderDeck.addTopCard(p1Active.getTopCard());
+				HolderDeck.addTopCard(p2Active.getTopCard());
+				this.p2Active.eatTopCard();
+				this.p1Active.eatTopCard();
+			}
+			
+			boolean resolved = false;
+			
+			while (resolved == false)
+			{
+				doubleCheck();
+				Card p1Card = this.p1Active.getCard(this.p1Active.getCount() - totalOwed);
+				Card p2Card = this.p2Active.getCard(this.p1Active.getCount() - totalOwed);
+				System.out.println("p1Card: " + p1Card);
+				System.out.println("p2Card: " + p2Card);
+				
+				if(p1Card.getRank() > p2Card.getRank())
+				{ // if p1 wins...
+					doubleCheck();
+					postWinP1();
+					resolved = true;
+					System.out.println("Player 1 has won the War!!!");
+				}
+				if (p1Card.getRank() < p2Card.getRank())
+				{ // if p1 wins...
+					for (int i = 0; i < totalOwed; i++)
+					{
+						if (this.p2Active.getCount() - totalOwed <= 0)
+						{
+							for (int j = 0; j < this.p2Active.getCount(); j++)
+								//this.p2Won.addTopCard(this.p2Active.getTopCard());
+								postWinP2();
+							totalOwed = Math.abs(this.p2Active.getCount() - totalOwed);
+						}
+						else if (this.p2Active.getCount() > 0)
+						{
+							postWinP2();
+							resolved = true;
+						}
+						else
+						{
+							resetP2();
+							postWinP2();
+							resolved = true;
+						}
+						System.out.println("Player 2 has won the War!!!");
+					}
+				}
+				else if (p1Card.getRank() == p2Card.getRank())
+				{
+					totalOwed += 4;
+				}
+			}
+			resolved = false;
+		}
+	}
+	public void doubleCheck()
+	{
+		if (this.p1Active.getCount() <= 0)
+			resetP1();
+		if (this.p2Active.getCount() <= 0)
+			resetP2();
+	}
+	public void postWinP1()
+	{
+		p1Wins++;
+		p2Losses++;
+		doubleCheck();
+		HolderDeck.addTopCard(p1Active.getTopCard());
+		HolderDeck.addTopCard(p2Active.getTopCard());
+		this.p2Active.eatTopCard();
+		this.p1Active.eatTopCard();
+		for (int i = 0; i < HolderDeck.getCount(); i++)
+		{
+			p1Won.addTopCard(HolderDeck.getTopCard());
+			HolderDeck.eatTopCard();
+		}
+	}
+	public void postWinP2()
+	{
+		p2Wins++;
+		p1Losses++;
+		System.out.println("Player 2 wins");
+		HolderDeck.addTopCard(p1Active.getTopCard());
+		HolderDeck.addTopCard(p2Active.getTopCard());
+		this.p2Active.eatTopCard();
+		this.p1Active.eatTopCard();
+		for (int i = 0; i < HolderDeck.getCount(); i++)
+		{
+			p2Won.addTopCard(HolderDeck.getTopCard());
+			HolderDeck.eatTopCard();
+		}
+	}
+	public void resetP1()
+	{
+		System.out.println("Shufflework for P1!");
+		this.p1Won.shuffleThis();
+		this.p1Active = this.p1Won;
+		this.p1Won = new Deck(0);
+		//recycle.
+	}
+	public void resetP2()
+	{
+		System.out.println("Shufflework for P2!");
+		this.p2Won.shuffleThis();
+		this.p2Active = this.p2Won;
+		this.p2Won = new Deck(0);
+		//recycle.
+	}
+
+	public static int maxIntIndex(int[] in)
+	{
+		int out = in[0];
+		int prev = in[0];
+		for (int i = 0; i < in.length; i++)
+		{
+			if (i != 0 && in[i] > prev)
+			{
+				out = i;
+				prev = in[i];
+			}
+		}
+		return out;
+	}
+}

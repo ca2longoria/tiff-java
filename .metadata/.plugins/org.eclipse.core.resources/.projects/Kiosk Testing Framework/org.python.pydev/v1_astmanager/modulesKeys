@@ -1,0 +1,30 @@
+MODULES_MANAGER_V1
+__init__|/Library/Python/2.6/site-packages/selenium/webdriver/__init__.py
+action_chains|/Library/Python/2.6/site-packages/selenium/webdriver/common/action_chains.py
+alert|/Library/Python/2.6/site-packages/selenium/webdriver/common/alert.py
+base|/Library/Python/2.6/site-packages/selenium/webdriver/emulation/base.py
+by|/Library/Python/2.6/site-packages/selenium/webdriver/common/by.py
+command|/Library/Python/2.6/site-packages/selenium/webdriver/remote/command.py
+core|/Users/cesar/code/workspace/Kiosk Testing Framework/src/core.py
+desired_capabilities|/Library/Python/2.6/site-packages/selenium/webdriver/common/desired_capabilities.py
+errorhandler|/Library/Python/2.6/site-packages/selenium/webdriver/remote/errorhandler.py
+exceptions|/Library/Python/2.6/site-packages/selenium/common/exceptions.py
+extension_connection|/Library/Python/2.6/site-packages/selenium/webdriver/firefox/extension_connection.py
+firefox_binary|/Library/Python/2.6/site-packages/selenium/webdriver/firefox/firefox_binary.py
+firefox_profile|/Library/Python/2.6/site-packages/selenium/webdriver/firefox/firefox_profile.py
+graphs|/Users/cesar/code/workspace/Kiosk Testing Framework/src/graphs.py
+keyplay|/Users/cesar/code/workspace/Kiosk Testing Framework/src/keyplay.py
+keys|/Library/Python/2.6/site-packages/selenium/webdriver/common/keys.py
+mailtest|/Users/cesar/code/workspace/Kiosk Testing Framework/src/mailtest.py
+navigation|/Library/Python/2.6/site-packages/selenium/webdriver/emulation/navigation.py
+remote_connection|/Library/Python/2.6/site-packages/selenium/webdriver/remote/remote_connection.py
+run|/Users/cesar/code/workspace/Kiosk Testing Framework/src/run.py
+runbase|/Users/cesar/code/workspace/Kiosk Testing Framework/src/runbase.py
+rundnbassetsclickthrough|/Users/cesar/code/workspace/Kiosk Testing Framework/src/rundnbassetsclickthrough.py
+selenium|/Library/Python/2.6/site-packages/selenium/selenium.py
+selenium1|/Library/Python/2.6/site-packages/selenium/webdriver/emulation/selenium1.py
+service|/Library/Python/2.6/site-packages/selenium/webdriver/chrome/service.py
+ui|/Library/Python/2.6/site-packages/selenium/webdriver/support/ui.py
+utils|/Library/Python/2.6/site-packages/selenium/webdriver/common/utils.py
+webdriver|/Library/Python/2.6/site-packages/selenium/webdriver/chrome/webdriver.py
+webelement|/Library/Python/2.6/site-packages/selenium/webdriver/remote/webelement.py

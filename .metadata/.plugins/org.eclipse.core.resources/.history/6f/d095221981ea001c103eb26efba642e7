@@ -1,0 +1,49 @@
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import javax.swing.JFrame;
+
+public class Dpane extends JFrame
+{	public static BufferStrategy bs = null;
+	public static Dpane DP;
+	public static Graphics G;
+	private static double time = 0;
+	private static int[] nums = {32};
+	private static World base = null;
+	
+	/* nums:
+	 * 0	-	original Frames per Second
+	 */
+	
+	public Dpane()
+	{	base = new World(this, new InputBase(this), nums);
+		this.setSize(600, 480);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+		this.createBufferStrategy(2);
+    	bs = this.getBufferStrategy();
+    	while(run(timer()));
+	}
+	
+	public static void main(String[] args)
+	{	DP = new Dpane();
+	}
+	
+	private static boolean run(boolean ready)
+	{	if (!ready) return true;
+		G = bs.getDrawGraphics();
+		
+		base.draw(G);
+		
+		G.dispose();
+		bs.show();
+		return true;
+	}
+	
+	private static boolean timer()
+	{	if (time >= (1000/nums[0]))
+		{	time = 0;
+			return true;
+		}	time = System.currentTimeMillis()-time;
+		return false;
+	}
+}

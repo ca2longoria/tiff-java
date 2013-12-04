@@ -1,0 +1,98 @@
+
+public class NinePiece
+{
+	/**
+	 * @author:		Cesar A. Longoria II
+	 * 
+	 * This method of solving the puzzle is very inefficient and very
+	 * messy.  I call it Random Scatter (strangely, the name reminds
+	 * me of bird droppings).  It takes advantage only of the computer's
+	 * speed, randomly throwing the puzzle pieces together and hoping
+	 * that they'll come out right.  When they *do* come out right, the
+	 * program stops and displays the puzzle.
+	 */
+	
+	//  Here I declare all the puzzle pieces.
+	public static puzzlePiece num1 = new puzzlePiece("C", "H", "d", "c");
+	public static puzzlePiece num2 = new puzzlePiece("D", "C", "c", "d");
+	public static puzzlePiece num3 = new puzzlePiece("S", "D", "s", "h");
+	public static puzzlePiece num4 = new puzzlePiece("C", "H", "s", "h");
+	public static puzzlePiece num5 = new puzzlePiece("S", "D", "h", "d");
+	public static puzzlePiece num6 = new puzzlePiece("S", "S", "h", "c");
+	public static puzzlePiece num7 = new puzzlePiece("H", "D", "d", "h");
+	public static puzzlePiece num8 = new puzzlePiece("H", "C", "s", "c");
+	public static puzzlePiece num9 = new puzzlePiece("H", "D", "c", "c");
+	
+	public static puzzlePiece[] list = {num1, num2, num3, num4, num5, num6, num7, num8, num9};
+	public static puzzlePiece[][] thePuzzle = new puzzlePiece[3][3];
+	public static String finalPrint = "";
+	
+	public static void main(String[] args)
+	{	
+	
+		for (int i = 0; i < 100000; i++)
+		{
+		mixEm();
+		
+		scatter();
+		//checkIt(num1, num2);
+		
+		//check 'em
+		System.out.println(i);
+		}
+		
+	}
+	
+	public static void mixEm()
+	{
+		puzzlePiece temp1 = new puzzlePiece("","","","");
+		puzzlePiece temp2 = new puzzlePiece("","","","");
+		
+		for (int i = 0; i < list.length; i++)
+			list[i] = list[i].rotate((int)(Math.random() * 4));
+		
+		for (int i = 0; i < list.length * 2; i++)
+		{
+			int rNum1 = (int)(Math.random() * (list.length - 1)); // rNum means random number.
+			int rNum2 = (int)(Math.random() * (list.length - 1));
+			temp1 = list[rNum1];
+			temp2 = list[rNum2];
+			list[rNum1] = temp2;
+			list[rNum2] = temp1;
+		}
+	}
+	
+	public static void scatter()
+	{
+		int number = 0;
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++)
+			{
+				thePuzzle[j][i] = list[number];
+				number++;
+			}
+		
+		// test
+		number = 0;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				thePuzzle[j][i].print();
+				System.out.print(" ");
+				number++;
+			}
+			System.out.println();
+		}
+	}
+	
+	public static void theCheck()
+	{
+		checkIt(thePuzzle[0][0], thePuzzle[1][0]);
+	}
+	
+	public static boolean checkIt(puzzlePiece one, puzzlePiece two)
+	{
+		return true;
+	}
+}

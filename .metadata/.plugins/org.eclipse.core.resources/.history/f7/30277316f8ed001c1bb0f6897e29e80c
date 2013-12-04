@@ -1,0 +1,23 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class Main
+{
+	public static void main(String[] args)
+	{	Scanner s = new Scanner(System.in);
+		
+		//*
+		try{s = new Scanner(new File("test"));}catch(FileNotFoundException z){}
+		//*/
+		String pass = "BICOLORABLE.";
+		String fail = "NOT BICOLORABLE."
+		while(s.hasNextLine())
+		{	run(s.nextLine());
+		}
+	}
+
+	public static void run(String in)
+	{	
+	}
+}

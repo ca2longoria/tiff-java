@@ -1,0 +1,747 @@
+/*  Student information for assignment
+ *
+ *  On my honor, <NAME>, this programming assignment is my own work.
+ *
+ *  EID:
+ *  email address:
+ *  TA name:
+ *  programming hours: ___
+ *  
+ *  					4 + 6 + 6
+ *
+ * Lines of Code: ___
+ *
+ *
+ */
+
+ //slip days info
+ /*
+ Slip days used on this assignment: ___
+ Slip days I have used for the term thus far: ___
+ */
+
+import java.util.Random;
+
+/** 
+ * ArrayProblems.java<br>
+ * CS 307<br><br>
+ * 
+ * VERY IMPORTANT: For this assignment only, the only methods and classes from the 
+ * Java standard library you may use in your final solutions are:<br>
+ * 1. All methods from the System class<br>
+ * 2. All methods from the Math class<br>
+ * 3. All methods from the Random class<br>
+ * 4. native arrays, incding the <tt>arr.length</tt> field and 
+ * creating and using new native arrays
+ */
+public class ArrayProblems
+{
+    /**
+     * Determine the Hamming distance between two arrays of ints.
+     * @param aList != null, aList.length == bList.length
+     * @param bList != null, bList.length == aList.length
+     * @return the Hamming Distance between the two arrays of ints.
+     */    
+    public static int hammingDistance(int[] aList, int[] bList){
+        assert (aList != null && bList != null && aList.length == bList.length) : "Violation of precondition: hammingDistance";
+        
+        int counter = 0;
+        for (int i = 0; i < aList.length; i++)
+        	if (aList[i] != bList[i])
+        		counter++;
+        
+        return counter;
+    }
+    
+	/**
+     * determine if one array of ints is a permutation of another.
+     * neither the parameter <tt>listA</tt> or 
+     * the parameter <tt>listB</tt> are altered as a result of this method.
+     * @param listA != null
+     * @param listB != null
+     * @return <tt>true</tt> if listB is a permutation of listA, <tt>false</tt> otherwise
+     * 
+	*/
+	public static boolean isPermutation(int[] listA, int[] listB)
+	{	assert (listA != null && listB != null) : "Violation of precondition: isPermutation";
+
+		int[] selections = {listA[0]};
+		for (int i = 0; i < listA.length; i++)
+			if (i != 0 && isNew(listA, selections.length, listA[i])) // isNew and wedgeInt are placed beneath next Array Problem.
+				selections = wedgeInt(selections, listA[i], selections.length);
+		
+		int[][] selections2 = new int[selections.length][2];
+		for (int i = 0; i < selections.length; i++)
+			selections2[i][0] = selections[i];
+		//printIntArray(selections2);
+		for (int i = 0; i < selections2.length; i++)
+		{
+			int counter2 = 0;
+			for (int j = 0; j < listA.length; j++)
+				if (selections2[i][0] == listA[j])
+					counter2++;
+			selections2[i][1] = counter2; // [1] is the count for each varying int
+		}
+		//printIntArray(selections2);
+		for (int i = 0; i < selections2.length; i++)
+		{
+			int counter2 = 0;
+			for (int j = 0; j < listB.length; j++)
+				if (selections2[i][0] == listB[j])
+					counter2++;
+			if (counter2 != selections2[i][1])
+				return false;
+		}
+		
+		return true;
+	}
+
+
+	/**
+	 * determine if there is a majority element in an array of ints.
+	 * The parameter <tt>list</tt> is not altered as a result of this 
+	 * method.
+	 * @param list != null
+	 * @return  an index of the value of the majority element if it exists.
+	 * If a majority element does not exist return -1.
+	*/
+	public static int findMajority(int[] list)
+	{	assert ( list != null ) : "Violation of precondition: findMajority";
+	
+		int[] selections = {list[0]};
+		for (int i = 0; i < list.length; i++)
+			if (i != 0 && isNew(list, selections.length, list[i]))
+				selections = wedgeInt(selections, list[i], selections.length);
+		
+		int prev = 0;
+		int modeIndex = 0;
+		int modeCount = 0;
+		for (int i = 0; i < selections.length; i++)
+		{
+			int counter = 0;
+			for (int j = 0; j < list.length; j++)
+			{
+				if (list[j] == selections[i])
+					counter++;
+			}
+			if (counter > prev)
+			{
+				modeIndex = i;
+				modeCount = counter;
+				prev = counter;
+			}
+		}
+		//printIntArray(selections);
+		if (modeCount > (list.length / 2))
+			return selections[modeIndex];
+		else
+			return -1;
+	}
+	// Helper Mothod
+	public static boolean isNew(int[] theArray, int toCheck, int in)
+	{
+		for (int i = 0; i < toCheck; i++)
+			if (in == theArray[i])
+				return false;
+		return true;
+	}
+	// Helper Method (adds an int wherever you want in an int[])
+	public static int[] wedgeInt(int[] in, int toWedge, int wedgeHere)
+	{
+		int[] theAfter = new int[in.length - wedgeHere ];
+		for (int i = 0; i < theAfter.length; i++)
+			theAfter[i] = in[i + wedgeHere];
+		
+		int[] out = new int[in.length + 1];
+		for (int i = 0; i < in.length - theAfter.length; i++)
+			out[i] = in[i];
+		out[wedgeHere] = toWedge;
+		for (int i = 0; i < theAfter.length; i++)
+			out[i + wedgeHere + 1] = theAfter[i];
+		
+		return out;
+	}
+
+	/**
+	 * return a shuffled version of an array of ints.
+	 * @param original != null
+	 * @return a shuffled version of original. Original is not altered by this
+	 * method. Each possible permutation of original has a roughly uniform chance
+	 * of being returned.
+	*/
+	public static int[] shuffle(int[] original)
+	{	assert original != null : "Violation of precondition: shuffle";
+
+		int[] out = new int[original.length];
+		for (int i = 0; i < out.length; i++)
+			out[i] = original[i];
+	
+		for (int i = 0; i < original.length; i++)
+		{
+			int rNum1 = (int)(Math.random() * (out.length - 1) + .5);
+			int rNum2 = (int)(Math.random() * (out.length - 1) + .5);
+			int temp1 = out[rNum1];
+			int temp2 = out[rNum2];
+			out[rNum1] = temp2;
+			out[rNum2] = temp1;
+		}
+	
+	 	return out;
+	}
+	
+	
+	/**
+	 * determine if the elements of an array are non decreasing starting at index 1.
+	 * An array of length 1 is non decreasing.
+	 * <p>pre: list != null, list.length > 0
+     * <p>post: return true if the elements of an array are non decreasing, false otherwise
+     * @param list the array to check
+     * @return true if the elements of an the parameter <tt>list</tt>
+     *  are non decreasing, false otherwise
+	*/
+	public static boolean nonDecreasing(int[] list)
+	{	assert (list != null) && (list.length > 0) : "Violation of precondition: maxSum";
+	
+		int old = 0;
+		if (list.length != 1)
+			for (int i = 0; i < list.length; i++)
+			{
+				if (i == 0) // 
+					old = list[i];				
+				else if (list[i] < old)
+					return false;
+				else
+					old = list[i];			
+		}
+
+		return true;
+	}
+
+	/**
+	 * determine if the chess board represented by board is a safe set up.
+	 * <p>pre: board != null, board.length > 0, board is a square matrix.
+	 * (In other words all rows in board have board.length columns.),
+	 * all elements of board == 'q' or '.'. 'q's represent queens, '.'s
+	 * represent open spaces.<br>
+	 * <p>post: return true if the configuration of board is safe,
+	 * that is no queen can attack any other queen on the board.
+	 * false otherwise.
+	 * the parameter <tt>board</tt> is not altered as a result of 
+	 * this method.
+	 * @param board the chessboard
+	 * @return true if the configuration of board is safe,
+	 * that is no queen can attack any other queen on the board.
+	 * false otherwise.
+	*/
+	public static boolean queensAreSafe(char[][] board)
+	{	char[] validChars = {'q', '.', 'a', 'b', 'c'};
+		assert (board != null) && (board.length > 0)
+				&& isSquare(board) && onlyContains(board, validChars)
+				: "Violation of precondition: queensAreSafe";
+		
+		for (int i = 0; i < board.length; i++)
+		{
+			for (int j = 0; j < board[0].length; j++)
+				System.out.print(board[i][j] + " ");
+			System.out.println();
+		}
+		/*CS307 STUDENTS: ADD YOUR CODE HERE*/
+		for (int i = 0; i < board.length; i++)
+		{
+			for (int j = 0; j < board[0].length; j++)
+			{
+				System.out.println("calculating from " + i + "," + j);
+				if (board[i][j] == 'q' && !areOthers(board, 'q', i, j))
+				{
+					System.out.println("q is at " + j + "," + i);
+					return false;
+				}
+			}
+		}
+
+		
+		return true;
+	}
+	// Helper Method
+	public static boolean isPossible(char[][] theBoard, int x, int y)
+	{
+		if (x >= 0 && x < theBoard.length && y >= 0 && y < theBoard[0].length)
+			return true;
+		else
+			return false;
+	}
+	// Helper Method;
+	public static boolean areOthers(char[][] theBoard, char evil, int x, int y)
+	{
+		
+		// checks right side
+		int ignoreX = x;
+		int ignoreY = y;
+		for (int i = x; i < theBoard.length; i++)
+		{
+			System.out.println("theBoard at R " + i + "," + y + " is " + theBoard[i][y]);
+			if (isPossible(theBoard, i, y) && theBoard[i][y] == evil)	
+				if (i != ignoreX && y != ignoreY)
+				{
+					System.out.println("Queen discovered.");
+					return false;
+				}
+		}
+		// checks down-right diagonal
+		int k = y;
+		for (int i = x; i < theBoard.length; i++)
+		{
+			if (isPossible(theBoard, i, k) && i != ignoreY && k != ignoreX)
+				System.out.println("theBoard at DR " + i + "," + k + " is " + theBoard[i][k]);
+		if (isPossible(theBoard, i, k) && theBoard[i][k] == evil)
+			if (i != ignoreX && k != ignoreY)
+			{
+				System.out.println("Queen discovered.");
+				return false;
+			}
+			k++;
+		}
+		// checks down side
+		for (int j = y; j < theBoard[0].length; j++)
+		{
+			System.out.println("theBoard at D " + x + "," + j + " is " + theBoard[x][j]);
+			if (isPossible(theBoard, x, j) && theBoard[x][j] == evil)
+				if (x != ignoreX && j != ignoreY)
+				{
+					System.out.println("Queen discovered.");
+					return false;
+				}
+		}
+		// checks down-left diagonal
+		int k2 = y;
+		for (int i = x; i >= 0; i--)
+		{
+			if (isPossible(theBoard, i, k))
+				System.out.println("theBoard at DL " + i + "," + k2 + " is " + theBoard[i][k]);
+			if (isPossible(theBoard, i, k2) && theBoard[i][k2] == evil)
+				if (i != ignoreX && k2 != ignoreY)
+				{
+					System.out.println("Queen discovered.");
+					return false;
+				}
+			k2++;
+		}
+		return true;
+	}
+	
+	
+	/**
+	 * determine the status of a sudoku puzzle board. 0s represent open spaces.
+	 * <p> pre: board != null, board.length = 9, board is a square matrix.
+	 * <p> post: return 0 if the board is solved,<br> 
+	 * return 1 if it is incorrent due to an invalid digit,<br>
+	 * return 2 if it is incorrect due to a duplicate digit in a row, column, or sub region<br>
+	 * return 3 if it is a valid in progress board
+	 * @param board the sudoku board
+	 * @return an int based on the status of the board
+	 */
+	public static int sudokuStatus(int[][] board){
+		assert (board != null) && board.length == 9 && isSquare(board) 
+			: "Violation of precondition: sudokuStatus";
+		
+		/*CS307 STUDENTS: ADD YOUR CODE HERE*/
+		
+		return 0;
+	}
+	
+	/**
+	 * determine which row or column in a matrix has the largest sum.
+	 * <p>pre: mat != null, mat.length > 0,
+	 * mat is a rectangular matrix, mat[0].length > 0
+     * <p>post: determine which row or column of ints has the maximum sum in max. 
+     * If a row contains the maximum sum, return a string starting with "R" and 
+     * then the number of the row with no spaces. For example "R0" or "R12". If a 
+     * column contains the maximum sum, return a string starting with "C" and then 
+     * the number of the column with no spaces. For example "C0" or "C12".  
+     * If there is more than one row or column with the maximum sum 
+     * return a String for any one of them. 
+	*/
+	public static String maxSum(int[][] mat)
+	{	assert (mat != null) && (mat.length > 0) && (mat[0].length > 0)
+				&& isRectangular( mat ) : "Violation of precondition: maxSum";
+				
+		int[] sumRowArray = new int[mat[0].length];
+		int[] sumColArray = new int[mat.length];
+		int[] fullSumArray = new int[mat.length + mat[0].length];
+		
+		int hold = 0;
+		for (int i = 0; i < mat[0].length; i++)
+		{
+			for (int j = 0; j < mat.length; j++)
+			{
+				hold += mat[j][i];
+				sumRowArray[i] = hold;
+			}
+			hold = 0;
+		}
+		for (int i = 0; i < mat.length; i++)
+		{
+			for (int j = 0; j < mat[0].length; j++)
+			{
+				hold += mat[i][j];
+				sumColArray[i] = hold;
+			}
+			hold = 0;
+		}
+		for (int i = 0; i < mat[0].length; i++)
+			fullSumArray[i] = sumRowArray[i];
+		//printIntArray(sumRowArray);
+		for (int i = 0; i < mat.length; i++)
+			fullSumArray[i + mat[0].length] = sumColArray[i];
+		//printIntArray(sumColArray);
+		
+		int maxIndex = maxIntCustom(fullSumArray);
+		//System.out.println("This is the maxIndex :  " + maxIndex);
+		String out = "";
+		if (maxIndex < sumRowArray.length)
+		{
+			out += "C"; // in the end, this ends up as the Column.
+			out += maxIndex;
+		}
+		else if (maxIndex >= sumRowArray.length)
+		{	out += "R"; // in the end, this ends up as the Row.
+			out += maxIndex - sumRowArray.length;
+		}
+		else
+			System.out.println("Something's really wrong here..."); // this is, in effect, a personal joke of mine, which
+																	// I will occasionally use "just in case".	
+		//System.out.println("out is " + out);
+		return out;
+	}
+	
+	// Helper Method
+	public static int maxIntCustom(int[] in)
+	{
+		int out = 0;
+		int prev = in[0];
+		for (int i = 0; i < in.length; i++)
+		{
+			if (i != 0 && in[i] > prev)
+			{
+				out = i;
+				prev = in[i];
+			}
+		}
+		return out;
+	}
+	//  Helper Method, this one for testing purposes
+	public static void printIntArray(int[][] in)
+	{
+		for (int i = 0; i < in[0].length; i++)
+		{
+			for (int j = 0; j < in.length; j++)
+				System.out.print(in[j][i] + " ");
+			System.out.println();
+		}
+	}
+	//  Helper Method, this one for testing purposes
+	public static void printIntArray(int[] in)
+	{
+		for (int i = 0; i < in.length; i++)
+			System.out.print(in[i] + " ");
+		System.out.println();
+	}
+	
+	
+	public static void main(String[] args)
+	{			
+		//test 0
+        int[] h1 = {1, 2, 3, 4, 5, 4, 3, 2, 1};
+        int[] h2 = {1, 2, 2, 4, 5, 4, 3, 1, 1};
+        if( hammingDistance(h1, h2) == 2 )          
+            System.out.println("passed test 0, hamming distance");
+        else
+            System.out.println("failed test 0, hamming distance");
+        
+        //test 1
+		int[] a = {1, 2, 3};
+		int[] b = {2, 1, 3};
+		if ( isPermutation(a,b) )
+			System.out.println("passed test 1, isPermutation");
+		else
+			System.out.println("failed test 1, isPermutation");
+
+		//test 2
+		b = new int[]{2, 1, 3, 3};
+		if ( !isPermutation(a,b) )
+			System.out.println("passed test 2, isPermutation");
+		else
+			System.out.println("failed test 2, isPermutation");
+
+		//test 3
+		if( findMajority(b) == -1 )
+			System.out.println("passed test 3, findMajority");
+		else
+			System.out.println("failed test 3, findMajority");
+
+		//test 4
+		b[0] = 3;
+		int result = findMajority(b);
+		if( result == 0 || result == 2 || result == 3 )
+			System.out.println("passed test 4, findMajority");
+		else
+			System.out.println("failed test 4, findMajority");
+
+		//test 5
+		int[][] sBoard = { {7, 0, 1, 8, 0, 0, 9, 0, 0},
+				           {0, 3, 0, 4, 0, 0, 6, 5, 0},
+				           {9, 0, 0, 0, 5, 0, 3, 0, 0},
+				           {0, 2, 0, 1, 0, 0, 4, 0, 0},
+				           {3, 0, 0, 0, 8, 0, 0, 0, 5},
+				           {0, 0, 4, 0, 0, 5, 0, 7, 0},
+				           {0, 0, 5, 0, 2, 0, 0, 0, 3},
+				           {0, 1, 3, 0, 0, 6, 0, 4, 0},
+				           {0, 0, 9, 0, 0, 8, 5, 0, 2}};
+		result = sudokuStatus(sBoard);
+		if( result == 3)
+			System.out.println("passed test 5, sudokuStatus");
+		else
+			System.out.println("failed test 5, sudokuStatus");
+		
+
+		//test 6
+		b = new int[] {2, 5, 5, 5, 3, 6, 7};
+		a = shuffle(b);
+		if( isPermutation(a,b) )
+			System.out.println("passed test 6, shuffle");
+		else
+			System.out.println("failed test 6, shuffle");
+
+		//test 7
+		b = new int[]{0};
+		if( nonDecreasing(b))
+			System.out.println("passed test 7, nonDecreasing");
+		else
+			System.out.println("failed test 7, nonDecreasing");			
+
+		//test 8
+		char[][] safe = { {'.', '.', '.'},
+		                  {'q', '.', '.'},
+		                  {'.', '.', 'q'}};
+		if( queensAreSafe(safe) )
+			System.out.println("passed test 8, queensAreSafe");
+		else
+			System.out.println("failed test 8, queensAreSafe");
+
+		//test 9
+		char[][] unsafe = { {'.', '.', '.', 'q'},
+		                    {'.', '.', '.', '.'},
+		                    {'.', '.', '.', '.'},
+		                    {'q', '.', '.', '.'}};
+		if( !queensAreSafe(unsafe) )
+			System.out.println("passed test 9, queensAreSafe");
+		else
+			System.out.println("failed test 9, queensAreSafe");
+
+		//test 10
+		sBoard[8][7] = 4;
+		result = sudokuStatus(sBoard);
+		if( result == 3)
+			System.out.println("passed test 10, sudokuStatus");
+		else
+			System.out.println("failed test 10, sudokuStatus");
+		
+		//test 11
+		sBoard[8][7] = 1;
+		result = sudokuStatus(sBoard);
+		if( result == 3)
+			System.out.println("passed test 11, sudokuStatus");
+		else
+			System.out.println("failed test 11, sudokuStatus");
+		
+		//test 12
+		sBoard = new int[][] { {7, 5, 1, 8, 6, 3, 9, 2, 4},
+		                       {8, 3, 2, 4, 1, 9, 6, 5, 7},
+		                       {9, 4, 6, 7, 5, 2, 3, 8, 1},
+		                       {5, 2, 8, 1, 9, 7, 4, 3, 6},
+		                       {3, 6, 7, 2, 8, 4, 1, 9, 5},
+					           {1, 9, 4, 6, 3, 5, 2, 7, 8},
+					           {4, 8, 5, 9, 2, 1, 7, 6, 3},
+					           {2, 1, 3, 5, 7, 6, 8, 4, 9},
+					           {6, 7, 9, 3, 4, 8, 5, 1, 2}};
+		result = sudokuStatus(sBoard);
+		if( result == 9)
+			System.out.println("passed test 12, sudokuStatus");
+		else
+			System.out.println("failed test 12, sudokuStatus");
+		
+		//test 13
+		b = new int[] {0, 0, 0};
+		if( nonDecreasing(b))
+			System.out.println("passed test 13, nonDecreasing");
+		else
+			System.out.println("failed test 13, nonDecreasing");
+		
+		//test 14
+		b = new int[] {0, 2, 4};
+		if( nonDecreasing(b))
+			System.out.println("passed test 14, nonDecreasing");
+		else
+			System.out.println("failed test 14, nonDecreasing");
+		
+		//test 15
+		b = new int[] {0, 0, 1, 1, 2, 2, 3, 4, 1000};
+		if( nonDecreasing(b))
+			System.out.println("passed test 15, nonDecreasing");
+		else
+			System.out.println("failed test 15, nonDecreasing");
+		
+		//test 16
+		b = new int[] {0, 0, 1, 0, 1, 1,};
+		if( !nonDecreasing(b)) //  CORRECTION MADE!!!  I believe there was supposed to be a "!" before the condition.
+			System.out.println("passed test 16, nonDecreasing");
+		else
+			System.out.println("failed test 16, nonDecreasing");
+		
+		//test 17
+		b = new int[] {0, 2, 1};
+		if( !nonDecreasing(b))
+			System.out.println("passed test 17, nonDecreasing");
+		else
+			System.out.println("failed test 17, nonDecreasing");
+		
+		//test 18
+		int[][] mat = { {1, 2, 3, 4},
+		                {0, 0, 0, 0},
+		                {1, 2, 3, 10},
+		                {4, 3, 2, 1}};
+		if( maxSum(mat).equals("R2") )
+			System.out.println("passed test 18, maxSum");
+		else
+			System.out.println("failed test 18, maxSum");
+		
+		/*CS307 STUDENTS: ADD YOUR TESTS HERE*/
+//		my test 1
+		int[][] mat2 = {{1, 2, 1, 5, 6 },
+		                {0, 0,  40, 0, 3 },
+		                {1, 10, 30, 1, 3 },
+		                {3, 2,  7, 2, 6 }};
+		if( maxSum(mat2).equals("C2") )
+			System.out.println("passed test my 1, maxSum");
+		else
+			System.out.println("failed test my 1, maxSum");
+		
+//		my test 2
+		int[] test = {9, 4, 1, 7, 9, 9, 4, 9, 9};
+		if( findMajority(test) == 9 )
+			System.out.println("passed test my 2, findMajority");
+		else
+			System.out.println("failed test my 2, findMajority");
+		
+//		my test 3
+		int[] a2 = {1, 2, 2, 2, 7, 4, 3};
+		int[] b2 = {7, 3, 2, 2, 1, 2, 4};
+		if ( isPermutation(a2, b2) )
+			System.out.println("passed test my 3, isPermutation");
+		else
+			System.out.println("failed test my 3, isPermutation");
+		
+//		my test 4
+		char[][] safe2 = { {'a', 'b', 'c', '.'},
+		                    {'.', '.', '.', 'q'},
+		                    {'.', 'a', 'b', 'c'},
+		                    {'q', '.', '.', '.'}};
+		if( queensAreSafe(safe2) )
+			System.out.println("passed test 9, queensAreSafe");
+		else
+			System.out.println("failed test 9, queensAreSafe");
+		
+		
+		
+		
+	}
+
+
+
+	/* pre: mat != null
+	   post: return true if mat is a square matrix, false otherwise
+	*/
+	private static boolean isSquare(char[][] mat)
+	{	assert mat != null : "Violation of precondition: isSquare";
+
+		final int numRows = mat.length;
+		int row = 0;
+		boolean square = true;
+		while( square && row < numRows )
+		{	square = ( mat[row] != null) && (mat[row].length == numRows);
+			row++;
+		}
+		return square;
+	}
+	
+	/* pre: mat != null
+	   post: return true if mat is a square matrix, false otherwise
+	*/
+	private static boolean isSquare(int[][] mat)
+	{	assert mat != null : "Violation of precondition: isSquare";
+
+		final int numRows = mat.length;
+		int row = 0;
+		boolean square = true;
+		while( square && row < numRows )
+		{	square = ( mat[row] != null) && (mat[row].length == numRows);
+			row++;
+		}
+		return square;
+	}
+
+
+	/* pre: mat != null, valid != null
+	   post: return true if all elements in mat are one of the characters in valid
+	*/
+	private static boolean onlyContains(char[][] mat, char[] valid)
+	{	assert mat != null && valid != null : "Violation of precondition: onlyContains";
+
+		int row = 0;
+		int col;
+		boolean correct = true;
+		while( correct && row < mat.length)
+		{	col = 0;
+			while(correct && col < mat[row].length)
+			{	correct = contains(valid, mat[row][col]);
+				col++;
+			}
+			row++;
+		}
+		return correct;
+	}
+
+
+	/* pre: list != null
+	   post: return true if c is in list
+	*/
+	private static boolean contains(char[] list, char c)
+	{	assert ( list != null ) : "Violation of precondition: contains";
+
+		boolean found = false;
+		int index = 0;
+		while( !found && index < list.length)
+		{	found = list[index] == c;
+			index++;
+		}
+		return found;
+	}
+
+
+	/* pre: mat != null, mat.length > 0
+	 * post: return true if mat is rectangular
+	 */
+	private static boolean isRectangular(int[][] mat)
+	{	assert (mat != null) && (mat.length > 0) : "Violation of precondition: isRectangular";
+
+		boolean correct = true;
+		final int numCols = mat[0].length;
+		int row = 0;
+		while( correct && row < mat.length)
+		{	correct = (mat[row] != null) && (mat[row].length == numCols);
+			row++;
+		}
+		return correct;
+	}
+
+}

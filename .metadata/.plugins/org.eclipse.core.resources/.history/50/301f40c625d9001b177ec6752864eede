@@ -1,0 +1,71 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.io.File;
+
+import javax.imageio.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.JFrame;
+ 
+public class Game extends JFrame {
+ 
+	public static int sWidth = 800;
+	public static int sHeight = 600;
+	public static Point p = new Point(1280 / 2 - sWidth / 2, 800 / 2 - sHeight / 2);
+	public static Graphics G;
+	
+	public static BufferedImage bg;
+	public static String filename = "blue";
+	
+	
+	public static void main(String[] args) {
+		new Game();
+	}
+	
+	public Game() {
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setUndecorated(true);
+		this.setSize(800,600);
+		this.setLocation(p);
+		
+		this.setVisible(true);
+		
+		this.createBufferStrategy(2);
+		
+		gameLoop();
+	}
+	
+	public void initialSetup()
+	{
+		G = this.getGraphics();
+		try {bg = ImageIO.read( new File( "p/" + filename + ".jpg" ) );}catch(Exception z){}
+	}
+	private void gameLoop() {
+		// Your game logic goes here.
+ 
+		MouseInputAdapter listener = new MouseInputAdapter()
+        {
+            public void mouseMoved(MouseEvent e)
+            {
+            }
+            
+            public void mouseClicked(MouseEvent e)
+            {
+            }
+            
+            public void mouseExited(MouseEvent e)
+            {
+            }
+        };
+        
+		drawStuff();
+	}
+	
+	private void drawStuff()
+	{
+		// Code for the drawing goes here.
+		G.clearRect(x, y, width, height)
+	}
+ 
+}

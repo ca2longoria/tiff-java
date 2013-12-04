@@ -1,0 +1,89 @@
+package net.synapsehaven.tiff;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import com.sun.media.jai.codec.ImageCodec;
+import com.sun.media.jai.codec.ImageEncoder;
+import com.sun.media.jai.codec.TIFFEncodeParam;
+
+public class Tiff
+{
+	public Tiff(String filenames)
+	{
+		this(new String[]{filenames});
+	}
+	public Tiff(String[] filenames)
+	{
+		this(Arrays.asList(filenames));
+	}
+	public Tiff(BufferedImage[] bufs)
+	{
+		this(Arrays.asList(bufs));
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Tiff(Iterable filenames)
+	{
+		Iterator iter = filenames.iterator();
+		Object test = iter.next();
+		
+		if (test instanceof String)
+		{
+			try { bufs.add(ImageIO.read(new File((String)test))); }
+			catch (IOException e){}
+			
+			for (String s : (Iterable<String>)filenames)
+			{
+				try { bufs.add(ImageIO.read(new File(s))); }
+				catch (IOException e){}
+			}
+		}
+		else if (test instanceof BufferedImage)
+		{
+			bufs.add((BufferedImage)test);
+			for (BufferedImage bim : (Iterable<BufferedImage>)bufs)
+				this.bufs.add(bim);
+		}
+	}
+	
+	List<BufferedImage> bufs = new ArrayList<BufferedImage>();
+	
+	public void save(String fname)
+	{
+		TIFFEncodeParam params = new TIFFEncodeParam();
+		OutputStream os = null;
+		try { os = new FileOutputStream(fname); }
+		catch (FileNotFoundException e){}
+		ImageEncoder encoder = ImageCodec.createImageEncoder("tiff",os,params);
+		
+		Iterator<BufferedImage> iter = bufs.iterator();
+		iter.next();
+		params.setExtraImages(iter);
+		
+		for (int i=0; i < bufs.size(); ++i)
+			try { encoder.encode(bufs.get(i)); } catch (IOException e){}
+		try { os.close(); } catch (IOException e){}
+	}
+	
+	
+	public static void saveAsMultipage(String fname, BufferedImage[] bufs)
+	{
+		Tiff.saveAsMultipage(fname, Arrays.asList(bufs));
+	}
+	@SuppressWarnings("rawtypes")
+	public static void saveAsMultipage(String fname, Iterable images)
+	{
+		Tiff t = new Tiff(images);
+		t.save(fname);
+	}
+}

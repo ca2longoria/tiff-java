@@ -1,0 +1,175 @@
+/*  Student information for assignment
+ *
+ *  On <our|my> honor, <NAME1> and <NAME2>,
+ *  this programming assignment is <our|my> own work.
+ *
+ *  Student #1:
+ *  Name #1:
+ *  EID #1:
+ *  email address #1:
+ *  TA name #1:
+ *  Unique course ID #1:
+ *  programming hours #1:
+ *  
+ *  					Began at 12:00 noon
+ *
+ *  Student #2:
+ *  Name #2:
+ *  EID #2:
+ *  email address #2:
+ *  TA name #2:
+ *  Unique course ID #2:
+ *  programming hours #2:
+ *
+ * Total Lines of Code (all classes):
+*/
+
+import java.util.Scanner;
+
+public class Game
+{
+	/**
+	  * Play a game of war pausing for input after each round.
+	  */
+	public void go(){
+
+	}
+
+
+	/**
+	 * Play a game of war without pausing for input after each round.
+	 */
+	public void goFast(){
+
+	}
+
+
+	/**
+	 * Play many games of War. Output is suppressed. No results of individual rounds
+	 * or games is shown. When complete prints out the number of games won
+	 * by each player, the percentage of games won by each player,
+	 * and the average number of rounds per game.
+	 * @param numGames > 1
+	 */
+	public void playMany(int numGames){
+		
+	}
+
+	private Deck HolderDeck;
+	private Deck p1Active;
+	private Deck p1Won;
+	private Deck p2Active;
+	private Deck p2Won;
+	
+	//private boolean printEveryRound;
+	
+	public void buildGame(int holderSize)
+	{
+		buildHolderDeck(holderSize);
+		splitToDecks();
+		
+	}
+	public void buildHolderDeck(int numDecks)
+	{
+		this.HolderDeck = new Deck();
+		for (int i = 0; i < numDecks; i++)
+			HolderDeck.addDeck(new Deck());
+	}
+	public void splitToDecks()
+	{
+		HolderDeck.shuffleThis();
+		while (HolderDeck.getCount() > 0)
+		{
+			p1Active.addTopCard(HolderDeck.getTopCard());
+			HolderDeck.eatTopCard();
+			p2Active.addTopCard(HolderDeck.getTopCard());
+			HolderDeck.eatTopCard();
+		}
+	}
+	public void runRound()
+	{
+		int totalOwed = 0;
+		// first shot
+		if (p1Active.getTopCard().getRank() > p2Active.getTopCard().getRank())
+		{
+			p1Won.addTopCard(p2Active.getTopCard());
+			p2Active.eatTopCard();
+		}
+		else if (p1Active.getTopCard().getRank() < p2Active.getTopCard().getRank())
+		{
+			p2Won.addTopCard(p1Active.getTopCard());
+			p1Active.eatTopCard();
+		}
+		else if (p1Active.getTopCard().getRank() == p2Active.getTopCard().getRank())
+		{
+			totalOwed++; // first tie
+			totalOwed += 4; // next four cards (includes next battle attempt
+			boolean resolved = false;
+			while (resolved = false)
+			{
+				Card p1Card = p1Active.getCard(p1Active.getCount() - totalOwed);
+				Card p2Card = p2Active.getCard(p1Active.getCount() - totalOwed);
+				
+				if(p1Card.getRank() > p2Card.getRank())
+				{ // if p1 wins...
+					for (int i = 0; i < totalOwed; i++)
+					{
+						if (p1Active.getCount() > 0)
+						{
+							p1Won.addTopCard(p2Active.getTopCard());
+							p1Active.eatTopCard();
+							p2Active.eatTopCard();
+							resolved = true;
+						}
+						else
+						{
+							p1Won.shuffleThis();
+							p1Active = p1Won;
+							p1Won = new Deck(0);
+							//recycle.
+						}
+					}
+				}
+				if (p1Card.getRank() < p2Card.getRank())
+				{ // if p1 wins...
+					for (int i = 0; i < totalOwed; i++)
+					{
+						if (p1Active.getCount() > 0)
+						{
+							p2Won.addTopCard(p1Active.getTopCard());
+							p2Active.eatTopCard();
+							p1Active.eatTopCard();
+							resolved = true;
+						}
+						else
+						{
+							p2Won.shuffleThis();
+							p2Active = p2Won;
+							p2Won = new Deck(0);
+							//recycle.
+						}
+					}
+				}
+				else if (p1Card.getRank() == p2Card.getRank())
+				{
+					totalOwed += 4;
+				}
+			}
+		}
+	}
+
+	public static int maxIntIndex(int[] in)
+	{
+		int out = in[0];
+		int prev = in[0];
+		for (int i = 0; i < in.length; i++)
+		{
+			if (i != 0 && in[i] > prev)
+			{
+				out = i;
+				prev = in[i];
+			}
+		}
+		return out;
+	}
+}

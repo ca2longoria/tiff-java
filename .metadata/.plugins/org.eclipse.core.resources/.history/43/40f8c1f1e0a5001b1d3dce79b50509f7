@@ -1,0 +1,55 @@
+
+public class puzzlePiece
+{
+	private String[] thePiece = new String[4];
+	
+	public puzzlePiece(String top, String right, String bottom, String left)
+	{
+		thePiece[0] = top;
+		thePiece[1] = right;
+		thePiece[2] = bottom;
+		thePiece[3] = left;
+	}
+	
+	public puzzlePiece rotate(int times)
+	{
+		String temp2 = "";
+		String[] rotated = new String[4];
+		for (int i = 0; i < 4; i++)
+			rotated[i] = thePiece[i];
+		for (int i = 0; i < times; i++)
+			for (int j = 1; j <= 3; j++)
+			{
+				temp2 = rotated[3];
+				rotated[3] = rotated[3 - j];
+				rotated[3 - j] = temp2;
+			}
+
+		puzzlePiece temp = new puzzlePiece(rotated[0], rotated[1], rotated[2], rotated[3]);
+		return temp;
+	}
+	
+	public String rString() // return String, in other words.
+	{
+		String it = "";
+		for (int i = 0; i < 4; i++)
+			it += thePiece[i];
+		return it;
+	}
+	
+	public void print()
+	{
+		String it = "";
+		for (int i = 0; i < 4; i++)
+			it += thePiece[i];
+		System.out.print(it);
+	}
+	
+	public void println()
+	{
+		String it = "";
+		for (int i = 0; i < 4; i++)
+			it += thePiece[i];
+		System.out.println(it);
+	}
+}

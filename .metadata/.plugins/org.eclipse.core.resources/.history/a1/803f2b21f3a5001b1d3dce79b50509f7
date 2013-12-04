@@ -1,0 +1,218 @@
+
+public class NinePiece
+{
+	/**
+	 * @author:		Cesar A. Longoria II
+	 * 
+	 * This method of solving the puzzle is very inefficient and very
+	 * messy.  I call it Random Scatter (strangely, the name reminds
+	 * me of bird droppings).  It takes advantage only of the computer's
+	 * speed, randomly throwing the puzzle pieces together and hoping
+	 * that they'll come out right.  When they *do* come out right, the
+	 * program stops and displays the puzzle.
+	 */
+	
+	//  Here I declare all the puzzle pieces.
+	public static puzzlePiece num1 = new puzzlePiece("C", "H", "d", "c");
+	public static puzzlePiece num2 = new puzzlePiece("D", "C", "c", "d");
+	public static puzzlePiece num3 = new puzzlePiece("S", "D", "s", "h");
+	public static puzzlePiece num4 = new puzzlePiece("C", "H", "s", "h");
+	public static puzzlePiece num5 = new puzzlePiece("S", "D", "h", "d");
+	public static puzzlePiece num6 = new puzzlePiece("S", "S", "h", "c");
+	public static puzzlePiece num7 = new puzzlePiece("H", "D", "d", "h");
+	public static puzzlePiece num8 = new puzzlePiece("H", "C", "s", "c");
+	public static puzzlePiece num9 = new puzzlePiece("H", "D", "c", "c");
+	
+	public static puzzlePiece[] list = {num1, num2, num3, num4, num5, num6, num7, num8, num9};
+	public static puzzlePiece[][] thePuzzle = new puzzlePiece[3][3];
+	public static String finalPrint = "";
+	
+	public static void main(String[] args)
+	{	
+		int correct = 0;
+		int tries = 0;
+		while (correct < 24)
+		{
+			correct = 0;
+			
+			mixEm();
+		
+			scatter();
+		
+			correct = theCheck(correct);
+
+			tries++;
+			if (tries % 100000 == 0)
+			{
+				System.out.println(tries);
+				System.out.println(correct);
+			}
+		}
+		System.out.println("I have SUCCEEDED!!!/n");
+		System.out.println("(After " + tries + " attempts, of course)");
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				thePuzzle[j][i].print();
+				System.out.print(" ");
+			}
+			System.out.println();
+		}
+	}
+	
+	public static void mixEm()
+	{
+		puzzlePiece temp1 = new puzzlePiece("","","","");
+		puzzlePiece temp2 = new puzzlePiece("","","","");
+		
+		for (int i = 0; i < list.length; i++)
+			list[i] = list[i].rotate((int)(Math.random() * 4));
+		
+		for (int i = 0; i < list.length * 2; i++)
+		{
+			int rNum1 = (int)(Math.random() * (list.length - 1)); // rNum means random number.
+			int rNum2 = (int)(Math.random() * (list.length - 1));
+			temp1 = list[rNum1];
+			temp2 = list[rNum2];
+			list[rNum1] = temp2;
+			list[rNum2] = temp1;
+		}
+	}
+	
+	public static void scatter()
+	{
+		int number = 0;
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++)
+			{
+				thePuzzle[j][i] = list[number];
+				number++;
+			}
+		
+		// test
+		/**
+		number = 0;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				thePuzzle[j][i].print();
+				System.out.print(" ");
+				number++;
+			}
+			System.out.println();
+		}
+		*/
+	}
+	
+	public static int theCheck(int correct)
+	{
+		/**
+		if (checkIt(0, 0, 1, num1, num3))
+			System.out.println("working nicely");
+		else
+			System.out.println("YOU NUTS!?");
+		*/
+		//boolean theLast = false;
+
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (i - 1 >= 0) // top
+					if (checkIt(j, i, 0, thePuzzle[j][i], thePuzzle[j][i - 1]))
+						correct++;
+				if (j + 1 < 3) // right
+					if (checkIt(j, i, 1, thePuzzle[j][i], thePuzzle[j + 1][i]))
+						correct++;
+				if (i + 1 < 3) // bottom
+					if (checkIt(j, i, 2, thePuzzle[j][i], thePuzzle[j][i + 1]))
+						correct++;
+				if (j - 1 >= 0) // left
+					if (checkIt(j, i, 3, thePuzzle[j][i], thePuzzle[j - 1][i]))
+						correct++;
+			}
+		}
+		//System.out.println(correct);
+		//if (correct == 24)
+		//	theLast = true;
+		return correct;
+	}
+												 // side is 0 = top, 1 = right, so forth
+	public static boolean checkIt(int j, int i, int side, puzzlePiece one, puzzlePiece two)
+	{
+		boolean isIt = false; // has to start out false
+		int finalCheck = 0;
+		//  Now that I think about it, I don't think the first check is necessary...
+		
+		// checks if top is okay
+		if (i - 1 >= 0 && side == 0)
+		{	 // checks if the top letter is uppercase
+			if ((int)one.rCharArray()[0] >= 65 && (int)one.rCharArray()[0] <= 90)
+			{
+				if (one.rCharArray()[0] == (char)((int)two.rCharArray()[2] - 32))
+					finalCheck++;
+			}// checks if the top letter is lowercase
+			else if ((int)one.rCharArray()[0] >= 97 && (int)one.rCharArray()[0] <= 122)
+			{
+				if (one.rCharArray()[0] == (char)((int)two.rCharArray()[2] + 32))
+					finalCheck++;
+			}
+			else
+				finalCheck -= 100;
+		}
+		// checks if right is okay
+		if (j + 1 <= 3 && side == 1)
+		{	 // checks if the right letter is uppercase
+			if ((int)one.rCharArray()[1] >= 65 && (int)one.rCharArray()[1] <= 90)
+			{
+				if (one.rCharArray()[1] == (char)((int)two.rCharArray()[3] - 32))
+					finalCheck++;
+			}// checks if the right letter is lowercase
+			else if ((int)one.rCharArray()[1] >= 97 && (int)one.rCharArray()[1] <= 122)
+			{
+				if (one.rCharArray()[1] == (char)((int)two.rCharArray()[3] + 32))
+					finalCheck++;
+			}
+			else
+				finalCheck -= 100;
+		}
+		// checks if bottom is okay
+		if (i + 1 <= 3 && side == 2)
+		{	 // checks if the bottom letter is uppercase
+			if ((int)one.rCharArray()[2] >= 65 && (int)one.rCharArray()[2] <= 90)
+			{
+				if (one.rCharArray()[2] == (char)((int)two.rCharArray()[0] - 32))
+					finalCheck++;
+			}// checks if the bottom letter is lowercase
+			else if ((int)one.rCharArray()[2] >= 97 && (int)one.rCharArray()[2] <= 122)
+			{
+				if (one.rCharArray()[2] == (char)((int)two.rCharArray()[0] + 32))
+					finalCheck++;
+			}
+			else
+				finalCheck -= 100;
+		}
+		// checks if left is okay
+		if (j - 1 >= 0 && side == 3)
+		{	 // checks if the left letter is uppercase
+			if ((int)one.rCharArray()[3] >= 65 && (int)one.rCharArray()[3] <= 90)
+			{
+				if (one.rCharArray()[3] == (char)((int)two.rCharArray()[1] - 32))
+					finalCheck++;
+			}// checks if the left letter is lowercase
+			else if ((int)one.rCharArray()[3] >= 97 && (int)one.rCharArray()[3] <= 122)
+			{
+				if (one.rCharArray()[3] == (char)((int)two.rCharArray()[1] + 32))
+					finalCheck++;
+			}
+			else
+				finalCheck -= 100;
+		}
+		
+		if (finalCheck > 0)
+			isIt = true;
+		return isIt;
+	}
+}

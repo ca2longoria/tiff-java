@@ -1,0 +1,70 @@
+
+public class gameboard
+{
+	public static char[][] board;
+	public static final char baseChar = '.';
+	public static int[] theSize;
+	
+	// Need to have pieces with that board...
+	public static piece[] thePieces;
+	
+	public static arrayWorks aw = new arrayWorks();
+	
+	public gameboard(int width, int height, piece[] thosePieces)
+	{
+		board = new char[width][height];
+		int[] thisIsTheSize = {width, height};
+		theSize = thisIsTheSize;
+		for (int i = 0; i < height; i++)
+		{
+			for (int j = 0; j < width; j++)
+				board[j][i] = baseChar;
+		}
+		thePieces = aw.copyPieceArray(thosePieces);
+	}
+	
+	public void printBoard(char mode)
+	{
+		if (mode == 'a') // plain print.  nothing fancy.
+		{
+			for (int i = 0; i < board[0].length; i++)
+			{
+				for (int j = 0; j < board.length; j++)
+					System.out.print(board[j][i] + " ");
+				System.out.println();
+			}
+		}
+		
+		if (mode == 'b') // prints with border around board.
+		{
+			System.out.print("+ ");
+			for (int i = 0; i < board.length; i++)
+				System.out.print("- ");
+			System.out.print("+\n");
+			for (int i = 0; i < board[0].length; i++)
+			{
+				System.out.print("| ");
+				for (int j = 0; j < board.length; j++)
+					System.out.print(board[j][i] + " ");
+				System.out.print("|\n");
+			}
+			System.out.print("+ ");
+			for (int i = 0; i < board.length; i++)
+				System.out.print("- ");
+			System.out.print("+\n");
+		}
+	}
+	
+	public void nextStep()
+	{
+		for (int i = 0; i < thePieces.length; i++)
+		{
+			int oldX = thePieces[i].getX(); // Stores the point piece used to be at.
+			int oldY = thePieces[i].getY();
+			thePieces[i].quickCheck(this);  // Checks this gameboard's size, gives it to the piece.
+			thePieces[i].move();			// The move method.
+			board[thePieces[i].getX()][thePieces[i].getY()] = thePieces[i].getChar(); // Stores new location.
+			board[oldX][oldY] = baseChar;	// Removes char from old position, replacing it with the base char.
+		}
+	}
+}

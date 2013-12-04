@@ -1,0 +1,331 @@
+
+public class arrayWorks {
+
+	/**
+	 * @param args
+	 * @author Cesar A. Longoria II
+	 * 
+	 * version 1.0
+	 * 
+	 * This is a class I built to better understand the ArrayList class
+	 * and what it's all about inside.  However, this class is built
+	 * to work with these regular arrays...
+	 * 			Int[]
+	 * 			String[]
+	 * ... as opposed to working with ArrayLists.  The methods used in
+	 * the class are pretty much stand-alone and can be copied into any
+	 * program, since they depend solely on their parameters to do their
+	 * jobs.  The class itself is just for convenience, in case you don't
+	 * want that much more room taken up in your program.  I repeat once
+	 * more.  These are not ArrayLists.  These are regular arrays.  Enjoy.
+	 * 
+	 * Included Methods:						Functions:
+	 * 
+	 * copyIntArray(int[])						returns a copied int array
+	 * copyStringArray(String[])				returns a copied String array
+	 * wedgeInt(int[], int, int)				inserts an int anywhere in an int array
+	 * eatInt(int[], int)						removes an int from anywhere in an int array
+	 * wedgeString(String[], String, int)		inserts a String anywhere in a String array
+	 * eatString(String[], int)					removes a String from anywhere in a String array
+	 * 
+	 * (There may already be methods out there that do this, but I bet those
+	 * don't use names like "wedge" and "eat"...)
+	 * 
+	 */
+	
+	private static int not1;
+	//  This part doesn't do anything.
+	public arrayWorks()
+	{
+		not1 = 0;
+	}
+	
+	//  Prints out an int[][] through parameters
+	public void printIntArray(int[][] in)
+	{
+		for (int i = 0; i < in[0].length; i++)
+		{
+			for (int j = 0; j < in.length; j++)
+				System.out.print(in[j][i] + " ");
+			System.out.println();
+		}
+	}
+	//  Prints out an int[] through parameters
+	public void printIntArray(int[] in)
+	{
+		for (int i = 0; i < in.length; i++)
+		{
+			System.out.print(in[i] + " ");
+		}
+		System.out.println();
+	}
+	
+	//  Copies an int array through parameters
+	public int[] copyIntArray(int[] in)
+	{
+		int[] out = new int[in.length];
+		for (int i = 0; i < in.length; i++)
+			out[i] = in[i];
+		return out;
+	}
+	
+	//  Copies a 2D int array through parameters
+	public int[][] copyIntArray(int[][] in)
+	{
+		int[][] out = new int[in.length][in[0].length];
+		for (int j = 0; j < in[0].length; j++)
+			for (int i = 0; i < in.length; i++)
+				out[i][j] = in[i][j];
+		return out;
+	}
+	
+	//	Copies a String array through parameters
+	public String[] copyStringArray(String[] in)
+	{
+		String[] out = new String[in.length];
+		for (int i = 0; i < in.length; i++)
+			out[i] = in[i];
+		return out;
+	}
+	
+	//	Copies a piece array through parameters
+	public piece[] copyPieceArray(piece[] in)
+	{
+		piece[] out = new piece[in.length];
+		for (int i = 0; i < in.length; i++)
+			out[i] = in[i];
+		return out;
+	}
+	
+	//  Sticks an int into the middle (or ends) of an array
+	public int[] wedgeInt(int[] in, int toWedge, int wedgeHere)
+	{
+		int[] theAfter = new int[in.length - wedgeHere ];
+		for (int i = 0; i < theAfter.length; i++)
+			theAfter[i] = in[i + wedgeHere];
+		
+		int[] out = new int[in.length + 1];
+		for (int i = 0; i < in.length - theAfter.length; i++)
+			out[i] = in[i];
+		out[wedgeHere] = toWedge;
+		for (int i = 0; i < theAfter.length; i++)
+			out[i + wedgeHere + 1] = theAfter[i];
+		
+		return out;
+	}
+	
+	//  Removes an int from the middle (or ends) of an array
+	public int[] eatInt(int[] in, int eatThis)
+	{
+		int[] theAfter = new int[in.length - eatThis - 1];
+		for (int i = 0; i < theAfter.length; i++)
+			theAfter[i] = in[i + eatThis + 1];
+		
+		int[] out = new int[in.length - 1];
+		if (eatThis != out.length)
+		{
+			for (int i = 0; i < in.length - theAfter.length; i++)
+				out[i] = in[i];
+			for (int i = 0; i < theAfter.length; i++)
+				out[i + eatThis] = theAfter[i];
+		}
+		else 
+			for (int i = 0; i < out.length; i++)
+				out[i] = in[i];
+		
+		return out;
+	}
+	//  Removes an int from the end of an array.
+	public int[] eatIntEnd(int[] in)
+	{
+		int[] out = new int[in.length - 1];
+		for (int i = 0; i < out.length; i++)
+			out[i] = in[i];
+		return out;
+	}
+	
+	//  Sticks a String into the middle (or ends) of an array
+	public String[] wedgeString(String[] in, String toWedge, int wedgeHere)
+	{
+		String[] theAfter = new String[in.length - wedgeHere ];
+		for (int i = 0; i < theAfter.length; i++)
+			theAfter[i] = in[i + wedgeHere];
+		
+		String[] out = new String[in.length + 1];
+		for (int i = 0; i < in.length - theAfter.length; i++)
+			out[i] = in[i];
+		out[wedgeHere] = toWedge;
+		for (int i = 0; i < theAfter.length; i++)
+			out[i + wedgeHere + 1] = theAfter[i];
+		
+		return out;
+	}
+	
+	//  Removes a String from the middle (or ends) of an array
+	public String[] eatString(String[] in, int eatThis)
+	{
+		String[] theAfter = new String[in.length - eatThis - 1];
+		for (int i = 0; i < theAfter.length; i++)
+			theAfter[i] = in[i + eatThis + 1];
+		
+		String[] out = new String[in.length - 1];
+		if (eatThis != out.length)
+		{
+			for (int i = 0; i < in.length - theAfter.length; i++)
+				out[i] = in[i];
+			for (int i = 0; i < theAfter.length; i++)
+				out[i + eatThis] = theAfter[i];
+		}
+		else 
+			for (int i = 0; i < out.length; i++)
+				out[i] = in[i];
+		
+		return out;
+	}
+	
+	// returns max int in an int[]
+	public static int maxInt(int[] in)
+	{
+		int out = 0;
+		int prev = in[0];
+		for (int i = 0; i < in.length; i++)
+		{
+			if (i != 0 && in[i] > prev)
+			{
+				out = in[i];
+				prev = in[i];
+			}
+		}
+		return out;
+	}
+	
+	public int randomIntChooser(int[] in)
+	{
+		return in[(int)(Math.random() * in.length + 0.5)];
+	}
+	
+	// doesn't work
+	public int[] rotateIntFwd(int[] in, int times)
+	{
+		int[] out = new int[in.length]; 
+		for (int i = 0; i < times; i++)
+		{
+			if (i != 0)
+				out[i] = in[i - 1];
+			else
+				out[i] = in[in.length - 1];
+		}
+		
+		return out;
+	}
+	
+	public int[] rotateIntBck(int[] in, int times)
+	{
+		int[] out = new int[in.length]; 
+		for (int i = 0; i < times; i++)
+		{
+			if (i != in.length - 1)
+				out[i] = in[i + 1];
+			else
+				out[i] = in[0];
+		}
+		
+		return out;
+	}
+	
+	// does work
+	public String[] rotateStringFwd(String[] in, int times)
+	{
+		String[] out = new String[in.length];
+		for (int j = 0; j < times; j++)
+		{
+			//System.out.println(j + " time");
+			for (int i = 0; i < in.length; i++)
+			{
+				if (i != 0)
+					out[i] = in[i - 1];
+				else
+					out[i] = in[in.length - 1]; // this one first
+				
+				//System.out.println("This one is " + out[i]);
+			}
+			in = copyStringArray(out);
+		}
+		return out;
+	}
+	
+	// maybe works?
+	public int[] rotateStringBck(int[] in, int times)
+	{
+		int[] out = new int[in.length]; 
+		for (int i = 0; i < times; i++)
+		{
+			if (i != in.length - 1)
+				out[i] = in[i + 1];
+			else
+				out[i] = in[0];
+		}
+		
+		return out;
+	}
+	
+	public double minDouble(double[] in)
+	{
+		double out = in[0];
+		for (int i = 0; i < in.length; i++)
+		{
+			if(in[i] < out)
+				out = in[i];
+		}
+		return out;
+	}
+	// custom build
+	public double minDoubleSpecial(double[] in, int avoid)
+	{
+		double out;
+		if (in[0] != avoid)
+			out = in[0];
+		else
+			out = in[1];
+		for (int i = 0; i < in.length; i++)
+		{
+			if(in[i] < out && i != avoid)
+				out = in[i];
+		}
+		return out;
+	}
+	 // custom build
+	public int minDoubleIndexSpecial(double[] in, int avoid)
+	{
+		int out = 0;
+		double compare = in[0];
+		for (int i = 0; i < in.length; i++)
+		{
+			if(in[i] < compare && i != avoid)
+				out = i;
+		}
+		return out;
+	}
+	
+	public int toInt(String it)
+	{
+		String newString = it;
+		
+		int end = 0;
+		int m = 1;
+		for (int i = 1; i <= newString.length(); i++)
+		{
+			if ((int)(newString.charAt(newString.length() - i)) >= 48 && (int)(newString.charAt(newString.length() - i)) <= 58)
+			{
+				end += ((int)newString.charAt(newString.length() - i) - 48) * m;
+				m *= 10;
+			}
+			if ((newString.charAt(newString.length() - i)) == '-')
+				end *= -1;
+		}
+		
+		return end;
+	}
+	
+
+}

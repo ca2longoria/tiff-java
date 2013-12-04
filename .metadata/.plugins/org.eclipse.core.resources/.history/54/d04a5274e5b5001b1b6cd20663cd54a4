@@ -1,0 +1,354 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class weapons
+{
+	public String name;
+	public int index;
+	public int range;
+	public int power;
+	public int blast;
+	public int type;
+	private arrayWorks aw = new arrayWorks();
+	private int gWidth;
+	private int gHeight;
+	
+	public weapons(String theName, int theIndex, int theRange, int thePower, int theBlast, int theType)
+	{
+		this.name = theName;
+		this.index = theIndex;
+		this.range = theRange;
+		this.power = thePower;
+		this.blast = theBlast;
+		this.type = theType;
+		
+		gWidth = base1.gWidth;
+		gHeight = base1.gHeight;
+	}
+	
+	//  Weapons booleans, IMPORTANT
+	public boolean attackPossible(piece self, int theType, piece target)
+	{
+		// the different weapon abilities will be specified here.
+		
+		if (this.type == 0) // SWORD boolean
+		{
+			if (self.getDistance(target) <= this.range)
+			{
+				return true;
+			}
+		}
+		if (this.type == 1) // THROWN boolean
+		{
+			if (self.getDistance(target) <= this.range + (aw.toInt(self.returnPieceInfoString("speed")) / 2))
+			{	
+				return true;
+			}
+			/*for (int i = 0; i < base1.g.thePieces.length; i++)
+				if (target.getDistance(base1.g.thePieces[i]) <= this.blast)
+				{
+					System.out.print(base1.g.thePieces[i].name + " captured in the blast.  " + (this.power / 2) + " damage dealt.");
+					base1.g.thePieces[i].damage(this.power / 2);
+				}*/
+		}
+		if (this.type == 2) // BEAM boolean
+		{
+			//boolean inRange = false;
+			
+			for (int j = self.getY() - this.blast; j < this.blast * 2 + 1; j++) // check horizontal
+			{
+				for (int i = 0; i < gWidth; i++)
+				{	
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+						if (isPossible(i, j) && base1.g.thePieces[a].getX() == i && base1.g.thePieces[a].getY() == j)
+						{
+							//inRange = true; //								This whole thing insures that only the pieces on the same side as the target will get hit.
+							return true;
+						  /*if (target.name != base1.g.thePieces[a].name && ((base1.g.thePieces[a].getX() <= i && target.getX() <= i) || (base1.g.thePieces[a].getX() >= i && target.getX() >= i)))
+							{
+								System.out.println(base1.g.thePieces[a].name + " has taken " + (this.power / 3 * 2) + "damage.");
+								base1.g.thePieces[a].damage(this.power / 3 * 2);
+							}*/
+						}
+				}
+			}
+			for (int j = 0; j < gHeight; j++) // check vertical
+			{
+				for (int i = self.getX() - this.blast; i < this.blast * 2 + 1; i++)
+				{
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+						if (isPossible(i, j) && base1.g.thePieces[a].getX() == i && base1.g.thePieces[a].getY() == j)
+						{
+							//inRange = true; //								This whole thing insures that only the pieces on the same side as the target will get hit.
+							return true;
+						  /*if (target.name != base1.g.thePieces[a].name && ((base1.g.thePieces[a].getY() <= j && target.getY() <= j) || (base1.g.thePieces[a].getY() >= j && target.getY() >= j)))
+							{
+								System.out.println(base1.g.thePieces[a].name + " has taken " + (this.power / 3 * 2) + " damage.");
+								base1.g.thePieces[a].damage(this.power / 3 * 2);
+							}*/
+						}
+				}
+			}
+			/*if (inRange)
+			{
+				System.out.println(self.name + "'s" + this.name + " seared " + target.name + ".  " + this.power + " damage dealt.");
+				target.damage(this.power);
+			}*/
+		}
+		
+		if (this.type == 3) // GUN
+		{
+			boolean hitPiece = false; // if this is true, then the bullet stops.
+			
+			int i = self.getX();
+			if (target.getX() == self.getX() && target.getY() < self.getY())
+				for (int j = self.getY() - 1; j >= 0; j--) // check up
+				{
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+					{
+						if (base1.g.thePieces[a].getX() == i && base1.g.thePieces[a].getY() == j)
+						{
+							/*if (hitPiece == false)
+							{
+								System.out.println(self.name + "'s " + this.name + " buried lead in " + base1.g.thePieces[a].name + ".  " + this.power + " damage dealt.");
+								base1.g.thePieces[a].damage(this.power);
+							}*/
+							hitPiece = true;
+						}
+					}
+				}
+			
+			i = self.getY();
+			if (target.getY() == self.getY() && target.getX() > self.getX())
+				for (int j = self.getX() + 1; j < gWidth; j++) // check right
+				{
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+					{
+						if (base1.g.thePieces[a].getY() == i && base1.g.thePieces[a].getX() == j)
+						{
+							/*if (hitPiece == false)
+							{
+								System.out.println(self.name + "'s " + this.name + " buried lead in " + base1.g.thePieces[a].name + ".  " + this.power + " damage dealt.");
+								base1.g.thePieces[a].damage(this.power);
+							}*/
+							hitPiece = true;
+						}
+					}
+				}
+			
+			i = self.getX();
+			if (target.getX() == self.getX() && target.getY() > self.getY())
+				for (int j = self.getY() + 1; j >= gHeight; j++) // check down
+				{
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+					{
+						if (base1.g.thePieces[a].getX() == i && base1.g.thePieces[a].getY() == j)
+						{
+							/*if (hitPiece == false)
+							{
+								System.out.println(self.name + "'s " + this.name + " buried lead in " + base1.g.thePieces[a].name + ".  " + this.power + " damage dealt.");
+								base1.g.thePieces[a].damage(this.power);
+							}*/
+							hitPiece = true;
+						}
+					}
+				}
+			
+			i = self.getY();
+			if (target.getY() == self.getY() && target.getX() < self.getX())
+				for (int j = self.getX() - 1; j >= 0; j--) // check left
+				{
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+					{
+						if (base1.g.thePieces[a].getY() == i && base1.g.thePieces[a].getX() == j)
+						{
+							/*if (hitPiece == false)
+							{
+								System.out.println(self.name + "'s " + this.name + " buried lead in " + base1.g.thePieces[a].name + ".  " + this.power + " damage dealt.");
+								base1.g.thePieces[a].damage(this.power);
+							}*/
+							hitPiece = true;
+						}
+					}
+				}
+		}	
+	}
+	
+	
+	
+	
+	//  IMPORTANT!!!  This bit actually does the attacking.  Hoorah!
+	public void attack(piece self, int theType, piece target)
+	{
+		// the different weapon abilities will be specified here.
+		
+		if (this.type == 0) // SWORD
+		{
+			if (self.getDistance(target) <= this.range)
+			{
+				System.out.print(self.name + "'s " + this.name +  " cleaved " + target.name + ".  " + this.power + " damage dealt.");
+				target.damage(this.power);
+			}
+		}
+		//----------------------------------------------------------------------------------------------
+		if (this.type == 1) // THROWN
+		{
+			if (self.getDistance(target) <= this.range + (aw.toInt(self.returnPieceInfoString("speed")) / 2))
+			{	
+				System.out.print(self.name + "'s " + this.name +  " impaled " + target.name + ".  " + this.power + " damage dealt.");
+				target.damage(this.power);
+			}
+			for (int i = 0; i < base1.g.thePieces.length; i++)
+				if (target.getDistance(base1.g.thePieces[i]) <= this.blast)
+				{
+					System.out.print(base1.g.thePieces[i].name + " captured in the blast.  " + (this.power / 2) + " damage dealt.");
+					base1.g.thePieces[i].damage(this.power / 2);
+				}
+		}
+		//----------------------------------------------------------------------------------------------
+		if (this.type == 2) // BEAM
+		{
+			boolean inRange = false;
+			
+			for (int j = self.getY() - this.blast; j < this.blast * 2 + 1; j++) // check horizontal
+			{
+				for (int i = 0; i < gWidth; i++)
+				{	
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+						if (isPossible(i, j) && base1.g.thePieces[a].getX() == i && base1.g.thePieces[a].getY() == j)
+						{
+							inRange = true; //								This whole thing insures that only the pieces on the same side as the target will get hit.
+							if (target.name != base1.g.thePieces[a].name && ((base1.g.thePieces[a].getX() <= i && target.getX() <= i) || (base1.g.thePieces[a].getX() >= i && target.getX() >= i)))
+							{
+								System.out.println(base1.g.thePieces[a].name + " has taken " + (this.power / 3 * 2) + "damage.");
+								base1.g.thePieces[a].damage(this.power / 3 * 2);
+							}
+						}
+				}
+			}
+			for (int j = 0; j < gHeight; j++) // check vertical
+			{
+				for (int i = self.getX() - this.blast; i < this.blast * 2 + 1; i++)
+				{
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+						if (isPossible(i, j) && base1.g.thePieces[a].getX() == i && base1.g.thePieces[a].getY() == j)
+						{
+							inRange = true; //								This whole thing insures that only the pieces on the same side as the target will get hit.
+							if (target.name != base1.g.thePieces[a].name && ((base1.g.thePieces[a].getY() <= j && target.getY() <= j) || (base1.g.thePieces[a].getY() >= j && target.getY() >= j)))
+							{
+								System.out.println(base1.g.thePieces[a].name + " has taken " + (this.power / 3 * 2) + " damage.");
+								base1.g.thePieces[a].damage(this.power / 3 * 2);
+							}
+						}
+				}
+			}
+			if (inRange)
+			{
+				System.out.println(self.name + "'s" + this.name + " seared " + target.name + ".  " + this.power + " damage dealt.");
+				target.damage(this.power);
+			}
+		}
+		//----------------------------------------------------------------------------------------------
+		if (this.type == 3) // GUN
+		{
+			boolean hitPiece = false; // if this is true, then the bullet stops.
+			
+			int i = self.getX();
+			if (target.getX() == self.getX() && target.getY() < self.getY())
+				for (int j = self.getY() - 1; j >= 0; j--) // check up
+				{
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+					{
+						if (base1.g.thePieces[a].getX() == i && base1.g.thePieces[a].getY() == j)
+						{
+							if (hitPiece == false)
+							{
+								System.out.println(self.name + "'s " + this.name + " buried lead in " + base1.g.thePieces[a].name + ".  " + this.power + " damage dealt.");
+								base1.g.thePieces[a].damage(this.power);
+							}
+							hitPiece = true;
+						}
+					}
+				}
+			
+			i = self.getY();
+			if (target.getY() == self.getY() && target.getX() > self.getX())
+				for (int j = self.getX() + 1; j < gWidth; j++) // check right
+				{
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+					{
+						if (base1.g.thePieces[a].getY() == i && base1.g.thePieces[a].getX() == j)
+						{
+							if (hitPiece == false)
+							{
+								System.out.println(self.name + "'s " + this.name + " buried lead in " + base1.g.thePieces[a].name + ".  " + this.power + " damage dealt.");
+								base1.g.thePieces[a].damage(this.power);
+							}
+							hitPiece = true;
+						}
+					}
+				}
+			
+			i = self.getX();
+			if (target.getX() == self.getX() && target.getY() > self.getY())
+				for (int j = self.getY() + 1; j >= gHeight; j++) // check down
+				{
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+					{
+						if (base1.g.thePieces[a].getX() == i && base1.g.thePieces[a].getY() == j)
+						{
+							if (hitPiece == false)
+							{
+								System.out.println(self.name + "'s " + this.name + " buried lead in " + base1.g.thePieces[a].name + ".  " + this.power + " damage dealt.");
+								base1.g.thePieces[a].damage(this.power);
+							}
+							hitPiece = true;
+						}
+					}
+				}
+			
+			i = self.getY();
+			if (target.getY() == self.getY() && target.getX() < self.getX())
+				for (int j = self.getX() - 1; j >= 0; j--) // check left
+				{
+					for (int a = 0; a < base1.g.thePieces.length; a++)
+					{
+						if (base1.g.thePieces[a].getY() == i && base1.g.thePieces[a].getX() == j)
+						{
+							if (hitPiece == false)
+							{
+								System.out.println(self.name + "'s " + this.name + " buried lead in " + base1.g.thePieces[a].name + ".  " + this.power + " damage dealt.");
+								base1.g.thePieces[a].damage(this.power);
+							}
+							hitPiece = true;
+						}
+					}
+				}
+		}	
+	}
+	
+	
+	public boolean isPossible(int x, int y)
+	{
+		if (x < gWidth - 1 && x >= 0 && x < gHeight - 1 && y >= 0)
+			return true;
+		return false;
+	}
+	
+	// for when conversion of weapon type is necessary...
+	public int convertType(String in)
+	{
+		String[] titles = {"Sword", "Thrown", "Beam", "Gun"};  // There are currently 4 types of weapons in the weaponsList.txt file.
+		for (int i = 0; i < titles.length; i++)
+			if (in.equals(titles[i]))
+				return i;
+		return 100000000;
+	}
+	public String convertType(int in)
+	{
+		String[] titles = {"Sword", "Thrown", "Beam", "Gun"};
+		return titles[in];
+	}
+	
+}

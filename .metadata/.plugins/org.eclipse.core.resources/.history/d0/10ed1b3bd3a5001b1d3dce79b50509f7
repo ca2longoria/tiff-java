@@ -1,0 +1,31 @@
+
+public class NinePiece
+{
+	/**
+	 * @author:		Cesar A. Longoria II
+	 */
+	
+	//  Here I declare all the puzzle pieces.
+	public static puzzlePiece num1 = new puzzlePiece("C", "H", "d", "c");
+	puzzlePiece num2 = new puzzlePiece("D", "C", "c", "d");
+	puzzlePiece num3 = new puzzlePiece("S", "D", "s", "h");
+	puzzlePiece num4 = new puzzlePiece("C", "H", "s", "h");
+	puzzlePiece num5 = new puzzlePiece("S", "D", "h", "d");
+	puzzlePiece num6 = new puzzlePiece("S", "S", "h", "c");
+	puzzlePiece num7 = new puzzlePiece("H", "D", "d", "h");
+	puzzlePiece num8 = new puzzlePiece("H", "C", "s", "c");
+	puzzlePiece num9 = new puzzlePiece("H", "D", "c", "c");
+	
+	public static void main(String[] args)
+	{	
+		puzzlePiece[][] thePuzzle = new puzzlePiece[3][3];
+		
+		num1.print();
+		num1 = num1.rotate(2);
+		num1.print();
+		//mix 'em up
+		//throw 'em on
+		//check 'em
+		
+	}
+}

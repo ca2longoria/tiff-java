@@ -1,0 +1,160 @@
+package Game;
+
+import java.awt.Graphics;
+import java.util.Hashtable;
+
+import Basics.iAction;
+import Imaging.iDrawable;
+import Item.Itm;
+
+public class Actor extends Itm
+{
+	public Actor(String name, Itm home, double x, double y)
+	{
+		super(name, home, x, y);
+		oxy.X = 0.5;
+		oxy.Y = 1;
+	}
+	
+	public void draw(Graphics g)
+	{
+		if (direction == 1)
+			todraw_r.draw(g);
+		else if (direction == 0)
+			todraw_l.draw(g);
+	}
+	
+	public void setDraw(String name_l, String name_r)
+	{
+		todraw_l = frames.get(name_l);
+		todraw_r = frames.get(name_r);
+	}
+	public void setDraw(int direction, String name)
+	{
+		if (direction == 0)
+			todraw_l = frames.get(name);
+		else todraw_r = frames.get(name);
+	}
+	
+	public iDrawable todraw_r;
+	public iDrawable todraw_l;
+	public int direction = 1; // 0-left : 1-right
+	
+	public Hashtable<String,iDrawable> frames = new Hashtable<String,iDrawable>();
+	
+	public static void move(Actor a, int direction, double distance)
+	{	
+		if (direction == -1) return;
+	
+		if ((direction & 1) == 1) // if a diagonal
+		{	distance *= 1.0 / Math.sqrt(2);
+			
+			switch(direction)
+			{
+				case 1: // NE
+					a.xy.X += distance;
+					a.xy.Y -= distance; // since y is inverted
+					break;
+				case 3: // SE
+					a.xy.X += distance;
+					a.xy.Y += distance;
+					break;
+				case 5: // SW
+					a.xy.X -= distance;
+					a.xy.Y += distance;
+					break;
+				case 7: // NW
+					a.xy.X -= distance;
+					a.xy.Y -= distance;
+					break;
+			}
+		}
+		else // N E S W
+		{	switch(direction)
+			{	case 0:	a.xy.Y -= distance; break;
+				case 2:	a.xy.X += distance; break;
+				case 4:	a.xy.Y += distance; break;
+				case 6:	a.xy.X -= distance; break;
+			}
+		}
+		
+	}
+	
+	public static void faceCharacter(Actor a, Actor b)
+	{
+		if (a.xy.x() < b.xy.x())
+			a.direction = 1;
+		else a.direction = 0;
+	}
+	
+	public static class FaceCharacter implements iAction
+	{	public FaceCharacter(Actor a, Actor b)
+		{	this.a = a;
+			this.b = b;
+		}
+		public void action(Object param)
+		{	faceCharacter(a,b);
+		}
+		public Actor a;
+		public Actor b;
+	}
+	
+	public static void followCharacter(Actor a, Actor b, double distance)
+	{
+		//System.out.println("start distance: " + distance);
+		int dir = -1;
+		
+		double x = b.xy.x() - a.xy.x();
+		double y = b.xy.y() - a.xy.y();
+		
+		int u = 0;
+		int v = 0;
+		
+		if (x > 0) u += 1;
+		else if (x < 0) u -= 1;
+		if (y > 0) v += 1;
+		else if (y < 0) v -= 1;
+		
+		double flat = Math.sin(Math.PI/16);
+		double up = Math.sin(Math.PI/16*3);
+		double ratio = 0;
+		
+		//System.out.println("xy: " + x + " " + y);
+		
+		if (x > 0 && y <= 0)
+		{
+			ratio = -y/x;
+			if (ratio > up) dir = 0;
+			else if (ratio < flat) dir = 2;
+			else dir = 1;
+		}
+		else if (x > 0 && y > 0)
+		{
+			ratio = y/x;
+			if (ratio > up) dir = 4;
+			else if (ratio < flat) dir = 2;
+			else dir = 3;
+		}
+		else if (x < 0 && y <= 0)
+		{
+			ratio = -y/-x;
+			if (ratio > up) dir = 0;
+			else if (ratio < flat) dir = 6;
+			else dir = 7;
+		}
+		else if (x < 0 && y > 0)
+		{
+			ratio = y/-x;
+			if (ratio > up) dir = 4;
+			else if (ratio < flat) dir = 6;
+			else dir = 5;
+		}
+		else if (x > 0) dir = 2;
+		else if (x < 0) dir = 6;
+		
+		//System.out.println("distance: " + distance + " - " + dir);
+		move(a,dir,distance);
+		
+		//System.exit(0);
+	}
+}

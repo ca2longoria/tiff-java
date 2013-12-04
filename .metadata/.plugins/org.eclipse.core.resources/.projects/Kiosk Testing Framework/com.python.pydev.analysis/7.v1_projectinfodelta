@@ -1,0 +1,17 @@
+INSTUPgraphs
+/Users/cesar/code/workspace/Kiosk Testing Framework/src/graphs.py
+INFOS:&&1|1|2|0&&2|3|2|1&&3|4|2|5&&2|6|2|1&&2|7|2|1&&2|8|2|1&&2|9|2|1&&2|10|2|1&&2|11|2|1&&2|12|2|1&&2|13|2|1&&2|14|2|1
+__path_exists=9
+shortest_path_to=12
+display=14
+paths_to=10
+add=6
+strgraph=1
+__init__=3
+edge_exists=7
+path_exists=8
+nodes=4
+__shortest_path_to=13
+strgraph.__init__=5
+graphs=2
+__paths_to=11

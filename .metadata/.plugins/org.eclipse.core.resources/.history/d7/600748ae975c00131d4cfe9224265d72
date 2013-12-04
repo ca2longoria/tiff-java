@@ -1,0 +1,12 @@
+
+import net.synapsehaven.tiff.*;
+
+public class Runner {
+	public static void main(String[] args)
+	{
+		System.out.println("Nonsense.");
+
+		Tiff tiffy = new Tiff(args[1]);
+		tiffy.saveTripple("yay.tiff");
+	}
+}

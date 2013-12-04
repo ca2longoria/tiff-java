@@ -1,0 +1,23 @@
+Player Skills for:
+base1.java
+
+(This character, "*", is what defines a new player in the game.)
+(Having titles for the teams is nice, but it isn't necessary.)
+
+(The "#" refers to the number of weapons a piece carries.  Without it, destruction reigns.)
+(Never leave a 0 at the end of a Weapons list, lest you wish it excluded from the game.)
+
+
+  Name			(x,y)		Body	# - Weapons		Health		Speed		Mode		Team
+______________________________________________________________________________________________________
+
+* Cesar		 	 9 0		C		2   0 5			6			4			drone		Doomed
+* Sasuke		 11 0		S		1   1			7			3			Ninja		Doomed
+* TheFog		 0 0		F		1   5			72			1			drone		Doomed
+
+* Third			 2 2		T		3   1 4	6		247			9			Hokage		Hokages	
+				
+* Godzilla		 9 19		G		2   2 3			900			2			Ultimate	Awesomeness
+* Mike			 11 19		M		2   0 4			6			3			drone		Awesomeness
+
+

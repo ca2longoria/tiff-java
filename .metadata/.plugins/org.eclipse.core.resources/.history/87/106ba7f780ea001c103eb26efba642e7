@@ -1,0 +1,29 @@
+import java.awt.Color;
+import java.awt.Graphics;
+
+public class World extends Thread implements WorldFrame
+{	private InputBase iBase = null;
+	private Dpane DP = null;
+	private int[] intArr = null;
+	
+	//-- All custom data -----------------------------
+		private Color bgColor = Color.white;
+		
+	//------------------------------------------------
+	
+	public World(Dpane dp, InputBase ib, int[] intArr)
+	{	iBase = ib; DP = dp;
+		this.intArr = intArr;
+	}
+	
+	public void run()
+	{	System.out.println("Booya.");
+	}
+	
+	public void draw(Graphics g)
+	{	g.setColor(bgColor);
+		g.fillRect(0, 0, DP.getWidth(), DP.getHeight());
+	}
+	
+	
+}

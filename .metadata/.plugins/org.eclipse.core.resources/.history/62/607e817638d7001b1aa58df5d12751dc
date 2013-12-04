@@ -1,0 +1,48 @@
+import java.awt.*;
+
+public class Base
+{
+	public static Stopwatch sw = new Stopwatch();
+	public static DPanel D = new DPanel(800, 600);
+	public static Graphics2D G = D.getGraphics();
+	public static DoubleBuffer db = new DoubleBuffer();
+	
+	public static Level1 bg = new Level1("test2");
+	public static int frame = 0;
+	
+	public static bot Omar = new bot("Omar", 5, 0, 0, "red");
+	
+	public static boolean end = false;
+	
+	public static int framePause = 1000 / 32;
+	
+	public static void main(String[] args)
+	{
+		infinity();
+	}
+	
+	public static void infinity()
+	{
+		while (!end)
+		{
+			//if (frame == 0)
+			//	sw.start();
+			
+			bg.refresh();
+			D.sleep(framePause / 2);
+			
+			Omar.refresh();
+			D.sleep(framePause / 2);
+			//System.out.println(" on frame " + frame);
+			frame++;
+			
+			/*if (frame == 32)
+			{
+				sw.stop();
+				System.out.println("1 second is " + sw.time() + " seconds.");
+				end = true;
+			}*/
+			
+		}
+	}
+}

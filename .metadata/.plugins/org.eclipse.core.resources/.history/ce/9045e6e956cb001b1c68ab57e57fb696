@@ -1,0 +1,116 @@
+import java.awt.Color;
+import java.util.Scanner;
+import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.*;
+
+import javax.imageio.ImageIO;
+
+public class Dialogue
+{
+	public static bBox b = new bBox(Base.Size, 125, "", 11, 20, 28, 9);
+	public static BufferedImage image;
+	
+	public static Font F = new Font("sanserif", Font.PLAIN, 19);
+	public static Font FSmall = new Font("sansserif", Font.PLAIN, 10);
+	
+	private static File f;
+	private static Scanner s;
+	private static int Total = 0;
+	private static int[] numLines;
+	private static String[] imageNames;
+	private static String[][] Lines;	
+	public static int now = 0;
+	
+	public static boolean active = false;
+	
+	public Dialogue()
+	{
+		
+	}
+	
+	public void refresh()
+	{
+		if (active)
+		{
+			//System.out.println("this bit's working, plus now is  " + now);
+			if (now == 0)
+				arrange();
+			b.drawBox();
+			setImage();
+			Base.G.drawImage(image, null, num(12) - 1, num(21) - 1);
+			
+			Base.G.setFont(F);
+			Base.G.setColor(Color.white);
+			for (int i = 0; i < numLines[i]; i++)
+			{
+				System.out.println("Text should be typing this:  " );
+				//for (int j = 0; j < Lines[now][i].length(); j++)
+					//Base.G.drawString(Lines[now][i].charAt(j) + "", num(18), num(21) + (i * 6));
+				Base.G.drawString(Lines[now][i], num(18), num(21) + (i * 14)); // 6 is the spacer
+				//Base.D.sleep(100);
+			}
+		}
+	}
+	
+	// allows setting of file outside of class
+	public void setFile(File F)
+	{ f = F; }
+	
+	public void next()
+	{
+		//System.out.println("next() is working");
+		if (now < Total)
+			now++;
+		else
+		{
+			active = false;
+			Total = 0;
+			now = 0;
+			try{Base.screen.refresh();}catch(Exception z){}
+		}
+	}
+	
+	// updates the current image
+	public void setImage()
+	{
+		try{image = ImageIO.read(new File("p/" + imageNames[now] + ".jpg"));}catch(Exception z){}
+	}
+	// updates everything else (before the image)
+	public void arrange()
+	{
+		try{s = new Scanner(f);}catch(Exception z){}
+		
+		Total = s.nextInt();
+		numLines = new int[Total];
+		imageNames = new String[Total];
+		System.out.println(s.nextLine());
+		System.out.println(s.nextLine());
+		for (int i = 0; i < Total; i++)
+			try{numLines[i] = s.nextInt();}catch(Exception z){System.out.println("Still having problems here.");}
+		for (int i = 0; i < Total; i++)
+			System.out.print("numLines is:  " + numLines[i] + "  ,  ");
+			System.out.println();
+		for (int i = 0; i < Total; i++)
+		{	// ACTUAL
+			s.nextLine();
+			imageNames[i] = s.next();
+			System.out.println("image Names " + i + " is " + imageNames[i]);
+			Lines = new String[Total][numLines[i]];
+			for (int j = 0; j < numLines[i]; j++)
+			{
+				Lines[i][j] = s.nextLine();
+				System.out.println("The Lines, " + i + " length " + Lines.[i].length + " themselves are... " + Lines[i][j]);
+			}
+		}
+		//for (int i = 0; i < Total; i++)
+		//	for (int j = 0; j < numLines[i]; j++)
+		//		System.out.println("The Lines, " + i + " length " + Lines.length + " themselves are... " + Lines[i][j]);
+	}
+	
+	public int now()
+	{ return now; }
+	// you know...
+	public int num(int in)
+	{ return in * Base.Size; }
+}

@@ -1,0 +1,10 @@
+Jul 12, 2011 2:48:34 AM com.interaktonline.jseclipse.JavaScriptEditorPlugin start
+INFO: JSEclipse start
+Jul 12, 2011 2:48:35 AM com.interaktonline.jseclipse.library.ResourceParser run
+INFO: parsing project: LookinForJSEclipse
+Jul 12, 2011 2:48:35 AM com.interaktonline.jseclipse.library.ResourceParser run
+INFO: parsing project: LookinForJSEclipse
+Jul 12, 2011 2:48:35 AM com.interaktonline.jseclipse.library.ResourceParser run
+INFO: -- HtmlLibraryManager -- parsing for: 86
+Jul 12, 2011 2:48:35 AM com.interaktonline.jseclipse.library.ResourceParser run
+INFO: -- JsLibraryManager -- parsing for: 255

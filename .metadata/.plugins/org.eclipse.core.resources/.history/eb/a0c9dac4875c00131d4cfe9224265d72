@@ -1,0 +1,9 @@
+
+import net.synapsehaven.tiff.*;
+
+public class Runner {
+	public static void main(String[] args)
+	{
+		
+	}
+}

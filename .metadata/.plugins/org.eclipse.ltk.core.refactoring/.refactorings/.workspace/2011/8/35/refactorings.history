@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete 10 resources" deleteContents="false" description="Delete 10 resources" element1="/Kiosk Testing Framework/src/checkboxes.py" element10="/Kiosk Testing Framework/src/testlogger.py" element2="/Kiosk Testing Framework/src/chromedriver.log" element3="/Kiosk Testing Framework/src/dataload.py" element4="/Kiosk Testing Framework/src/demodata.csv" element5="/Kiosk Testing Framework/src/detailed-log.txt" element6="/Kiosk Testing Framework/src/fusiontest.py" element7="/Kiosk Testing Framework/src/massemail.py" element8="/Kiosk Testing Framework/src/multirun.sh" element9="/Kiosk Testing Framework/src/night-log.txt" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="10" stamp="1314374971064"/>
+</session>

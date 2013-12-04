@@ -1,0 +1,48 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class base1
+{
+	
+	public static void main(String[] args)
+	{
+		int[] mySkills = {2};
+		piece player = new piece(0, 0, 'C', mySkills, "human");
+		
+		piece[] pieces = {player};
+		gameboard g = new gameboard(20, 10, pieces);
+		
+		boolean win = false;
+		
+		int turn = 1;
+		while (win == false)
+		{
+			System.out.println("Turn:  " + turn);
+			nextTurn(g);
+			turn++;
+		}
+		
+	}
+	
+	public static void nextTurn(gameboard gb)
+	{
+		gb.nextStep();
+		gb.printBoard('b');
+	}
+	
+	public static piece[] getPlayers() throws FileNotFoundException
+	{
+		File f = new File("trialGame.txt");
+		Scanner s1 = new Scanner(f);
+		
+		piece[] allPieces = new piece[1];
+		
+		int counter = 0;
+		while (s1.hasNext())
+		{
+			if (s1.next() == "*")
+				counter++;
+		}
+	}
+}

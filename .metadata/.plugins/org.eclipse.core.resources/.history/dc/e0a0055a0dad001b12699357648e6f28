@@ -1,0 +1,82 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class base1
+{
+	public static arrayWorks aw = new arrayWorks();
+	
+	public static void main(String[] args) throws FileNotFoundException
+	{
+		//int[] mySkills = {3};
+		//piece player = new piece("Sample", 0, 0, 'C', mySkills, "human");
+		
+		piece[] pieces = getPlayers();
+		gameboard g = new gameboard(20, 20, pieces);
+		
+		boolean win = false;
+		
+		int turn = 1;
+		//while (win == false)
+		{
+			System.out.println("Turn:  " + turn);
+			nextTurn(g);
+			turn++;
+		}
+		
+	}
+	
+	public static void nextTurn(gameboard gb)
+	{
+		gb.nextStep();
+		gb.printBoard('b');
+	}
+	
+	public static piece[] getPlayers() throws FileNotFoundException
+	{
+		File f = new File("trialGame.txt"); // This is the file the players will be taken from.
+		Scanner s1 = new Scanner(f);
+		Scanner s2 = new Scanner(f);
+		
+		int counter = 0;
+		while (s1.hasNext())
+		{
+			if (s1.next().equals("*"))
+				counter++;
+		}
+		//System.out.println(counter);
+		piece[] allPieces = new piece[counter];
+		
+		String[] allNames = new String[counter];
+		int[] allX = new int[counter];
+		int[] allY = new int[counter];
+		char[] allBody = new char[counter];
+		int[][] allSkills = new int[counter][1];
+		String[] allMode = new String[counter];
+		
+		int counter2 = 0;
+		while (s2.hasNext())		//  This is where each piece is specifiedin the piece[].
+		{
+			//System.out.println(counter2);
+			if (s2.next().equals("*") && counter2 <= counter)
+			{
+				allNames[counter2] = s2.next();
+				allX[counter2] = s2.nextInt();
+				allY[counter2] = s2.nextInt();
+				allBody[counter2] = s2.next().charAt(0);
+				allSkills[counter2][0] = s2.nextInt();
+				allMode[counter2] = s2.next();
+				
+				counter2++;
+			}
+			//System.out.println("counter 2 = " + counter2);
+		}
+			
+		for (int i = 0; i < counter; i++)  // This puts all the above into their respective piece.
+		{
+			aw.printIntArray(allSkills);
+			allPieces[i] = new piece(allNames[i], allX[i], allY[i], allBody[i], allSkills[i], allMode[i]);
+		}				// Note, the "new" above.  This is an array of pieces, so each piece is a new one.
+		return allPieces;
+	}
+}

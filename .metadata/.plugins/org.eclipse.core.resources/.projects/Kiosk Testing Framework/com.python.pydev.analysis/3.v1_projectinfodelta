@@ -1,0 +1,13 @@
+INSTUPrundnbassetsclickthrough
+/Users/cesar/code/workspace/Kiosk Testing Framework/src/rundnbassetsclickthrough.py
+INFOS:&&3|1|2|0&&2|3|2|0&&2|4|2|0&&2|5|2|0&&3|6|2|0&&2|7|2|0&&2|8|2|0&&3|9|2|0&&3|10|2|0
+getState=5
+rundnbassetsclickthrough=2
+logoutFunction=7
+reachAssetView=8
+tr=9
+waitForAssetsLoad=3
+browser=1
+blocks=10
+getAssetFromPage=4
+sg=6
