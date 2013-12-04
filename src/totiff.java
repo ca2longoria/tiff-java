@@ -4,7 +4,7 @@ import java.util.Map;
 
 import net.synapsehaven.tiff.Tiff;
 
-public class Runner
+public class totiff
 {
 	public static void main(String[] args)
 	{
