@@ -45,7 +45,8 @@ public class Tiff
 			for (String s : (Iterable<String>)filenames)
 			{
 				try { bufs.add(ImageIO.read(new File(s))); }
-				catch (IOException e){}
+				catch (IOException e)
+				{ System.err.println("ERROR: Image file read failed: "+s); }
 			}
 		}
 		else if (test instanceof BufferedImage)
@@ -58,7 +59,7 @@ public class Tiff
 	
 	List<BufferedImage> bufs = new ArrayList<BufferedImage>();
 	
-	public void save(String fname)
+	public boolean save(String fname)
 	{
 		TIFFEncodeParam params = new TIFFEncodeParam();
 		OutputStream os = null;
@@ -67,12 +68,20 @@ public class Tiff
 		ImageEncoder encoder = ImageCodec.createImageEncoder("tiff",os,params);
 		
 		Iterator<BufferedImage> iter = bufs.iterator();
+		if (!iter.hasNext())
+		{
+			System.err.println("ERROR: No images to compile into file: "+fname);
+			return false;
+		}
+		
 		iter.next();
 		params.setExtraImages(iter);
 		
 		for (int i=0; i < bufs.size(); ++i)
 			try { encoder.encode(bufs.get(i)); } catch (IOException e){}
 		try { os.close(); } catch (IOException e){}
+		
+		return true;
 	}
 	
 	
