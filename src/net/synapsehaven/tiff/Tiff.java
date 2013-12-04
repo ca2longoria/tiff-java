@@ -61,12 +61,6 @@ public class Tiff
 	
 	public boolean save(String fname)
 	{
-		TIFFEncodeParam params = new TIFFEncodeParam();
-		OutputStream os = null;
-		try { os = new FileOutputStream(fname); }
-		catch (FileNotFoundException e){}
-		ImageEncoder encoder = ImageCodec.createImageEncoder("tiff",os,params);
-		
 		Iterator<BufferedImage> iter = bufs.iterator();
 		if (!iter.hasNext())
 		{
@@ -74,7 +68,16 @@ public class Tiff
 			return false;
 		}
 		
+		TIFFEncodeParam params = new TIFFEncodeParam();
+		OutputStream os = null;
+		try { os = new FileOutputStream(fname); }
+		catch (FileNotFoundException e){}
+		ImageEncoder encoder = ImageCodec.createImageEncoder("tiff",os,params);
+		
+		// First image is not extra.
 		iter.next();
+		
+		// The rest, though, are.
 		params.setExtraImages(iter);
 		
 		for (int i=0; i < bufs.size(); ++i)
